@@ -5,6 +5,7 @@ import './SearchArea.css';
 type SearchAreaProps = {
     searchQuery: string,
     onChange: (query: string) => void;
+    onClick: () => void;
 }
 
 export default class SearchArea extends Component<SearchAreaProps> {
@@ -20,10 +21,13 @@ export default class SearchArea extends Component<SearchAreaProps> {
                     type="text" 
                     className="search-input"
                     placeholder="Type book name..." 
-                    defaultValue={this.props.searchQuery}
+                    value={this.props.searchQuery}
                     onChange={this.handleInputChange}
                 />
-                <button className="search-btn">Search</button>
+                <button 
+                    className="search-btn" 
+                    onClick={this.props.onClick}
+                >Search</button>
             </div>
         )
     }

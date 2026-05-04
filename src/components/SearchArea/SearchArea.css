@@ -28,4 +28,9 @@ input.search-input {
     border: none;
     padding: 10px;
     border-radius: 5px;
+    outline: none;
+}
+
+.search-btn:active {
+    background-color: #52ACCC;
 }

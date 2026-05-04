@@ -8,17 +8,17 @@ import {searchBooks} from './api';
 class App extends Component {
 
   state = {
-      searchQuery: localStorage.getItem('currentSearchValue') || '',
-      books: [],
+    prevSearchQuery: '',
+    searchQuery: localStorage.getItem('currentSearchValue')?.trim() || '',
+    books: [],
   }
-    
+
   async componentDidMount() {
-    let query = this.state.searchQuery;
-    if (query.length < 3) {
-      query = 'new';
-    }
-    const result = await searchBooks(query);
-    this.setState({books: result});
+    const result = await searchBooks(this.state.searchQuery);
+    this.setState({
+      books: result,
+      prevSearchQuery: this.state.searchQuery,
+    });
   }
 
   onSearchQueryUpdate = (query: string) => {
@@ -26,11 +26,29 @@ class App extends Component {
     localStorage.setItem('currentSearchValue', query);
   }
 
+  onSearchClick = async () => {
+    const query = this.state.searchQuery.trim();
+    this.setState({
+        searchQuery: query,
+      })
+    if (query !== this.state.prevSearchQuery) {
+      const result = await searchBooks(query);
+      this.setState({
+        books: result,
+        prevSearchQuery: query,
+      });
+    }
+  }
+
   render () {
     return (
       <div className='app-wrapper'>
-        <SearchArea searchQuery={this.state.searchQuery} onChange={this.onSearchQueryUpdate}/>
-        <ResultArea books={this.state.books} />
+        <SearchArea 
+          searchQuery={this.state.searchQuery} 
+          onChange={this.onSearchQueryUpdate} 
+          onClick={this.onSearchClick}
+        />
+        <ResultArea books={this.state.books}/>
       </div>
     )
   }
