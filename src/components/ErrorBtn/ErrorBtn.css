@@ -1,0 +1,15 @@
+.error-btn {
+    background-color: #F2C7C7;
+    color: red;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    align-self: self-end;
+    margin-right: 100px;
+}
+
+.error-btn:active {
+    background-color: #D93232;
+}

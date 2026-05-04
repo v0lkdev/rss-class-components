@@ -4,6 +4,8 @@ import SearchArea from './components/SearchArea/SearchArea';
 import ResultArea from './components/ResultArea/ResultArea';
 import {searchBooks} from './api';
 import { Hourglass } from 'react-loader-spinner';
+import ErrorBtn from './components/ErrorBtn/ErrorBtn';
+import ErrorBoundary from './components/ErrorBoundary';
 
 class App extends Component {
 
@@ -63,23 +65,31 @@ class App extends Component {
   render () {
     return (
       <div className='app-wrapper'>
-        <SearchArea 
-          searchQuery={this.state.searchQuery} 
-          onChange={this.onSearchQueryUpdate} 
-          onClick={this.onSearchClick}
-          buttonIsDisabled={this.state.btnIsDisabled}
-        />
+        <ErrorBoundary fallback={<div>Oops😢</div>}>
+          <ErrorBtn />
+        </ErrorBoundary>
+        <ErrorBoundary fallback={<div>Oops😢</div>}>
+            <SearchArea 
+            searchQuery={this.state.searchQuery} 
+            onChange={this.onSearchQueryUpdate} 
+            onClick={this.onSearchClick}
+            buttonIsDisabled={this.state.btnIsDisabled}
+            />
+        </ErrorBoundary>
         {
           this.state.isLoading
-          ? <Hourglass
-            height="500"
-            width="500"
-            colors={['#3A8AA6', '#ADE5FF']}
-          />
-          : <ResultArea books={this.state.books}/>
+          ?
+          <ErrorBoundary fallback={<div>Oops😢</div>}>
+             <Hourglass
+              height="200"
+              width="200"
+              colors={['#3A8AA6', '#ADE5FF']}
+              />
+          </ErrorBoundary> : 
+          <ErrorBoundary fallback={<div>Oops😢</div>}>
+             <ResultArea books={this.state.books}/>
+          </ErrorBoundary>
         }
-        
-        
       </div>
     )
   }
