@@ -34,3 +34,8 @@ input.search-input {
 .search-btn:active {
     background-color: #52ACCC;
 }
+
+.search-btn:disabled {
+    background-color: #CCC;
+    color: #000;
+}

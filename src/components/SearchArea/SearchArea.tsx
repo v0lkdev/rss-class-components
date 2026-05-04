@@ -6,6 +6,7 @@ type SearchAreaProps = {
     searchQuery: string,
     onChange: (query: string) => void;
     onClick: () => void;
+    buttonIsDisabled: boolean;
 }
 
 export default class SearchArea extends Component<SearchAreaProps> {
@@ -27,6 +28,7 @@ export default class SearchArea extends Component<SearchAreaProps> {
                 <button 
                     className="search-btn" 
                     onClick={this.props.onClick}
+                    disabled={this.props.buttonIsDisabled}
                 >Search</button>
             </div>
         )
