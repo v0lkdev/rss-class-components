@@ -9,7 +9,7 @@ class App extends Component {
 
   state = {
     prevSearchQuery: '',
-    searchQuery: localStorage.getItem('currentSearchValue')?.trim() || '',
+    searchQuery: localStorage.getItem('currentSearchValue') || '',
     books: [],
   }
 
@@ -23,15 +23,15 @@ class App extends Component {
 
   onSearchQueryUpdate = (query: string) => {
     this.setState({searchQuery: query});
-    localStorage.setItem('currentSearchValue', query);
   }
 
   onSearchClick = async () => {
     const query = this.state.searchQuery.trim();
     this.setState({
-        searchQuery: query,
-      })
+      searchQuery: query,
+    });
     if (query !== this.state.prevSearchQuery) {
+      localStorage.setItem('currentSearchValue', query);
       const result = await searchBooks(query);
       this.setState({
         books: result,
