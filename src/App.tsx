@@ -16,11 +16,20 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    const result = await searchBooks(this.state.searchQuery);
-    this.setState({
-      books: result,
-      prevSearchQuery: this.state.searchQuery,
-    });
+    this.setState({isLoading: true});
+    this.setState({btnIsDisabled: true});
+    try {
+      const result = await searchBooks(this.state.searchQuery);
+      this.setState({
+        books: result,
+        prevSearchQuery: this.state.searchQuery,
+      });
+    }
+    catch (err: unknown) {
+        alert (`Oops! Something went wrong. We couldn’t load the results. Please try again. Error: ${(err as Error).message}`)
+    }
+    this.setState({isLoading: false});
+    this.setState({btnIsDisabled: false});
   }
 
   onSearchQueryUpdate = (query: string) => {
@@ -36,13 +45,18 @@ class App extends Component {
       this.setState({isLoading: true});
       this.setState({btnIsDisabled: true});
       localStorage.setItem('currentSearchValue', query);
-      const result = await searchBooks(query);
+      try {
+        const result = await searchBooks(query);
+        this.setState({
+          books: result,
+          prevSearchQuery: query,
+        });
+      }
+      catch (err: unknown) {
+        alert (`Oops! Something went wrong. We couldn’t load the results. Please try again. Error: ${(err as Error).message}`)
+      }
       this.setState({isLoading: false});
       this.setState({btnIsDisabled: false});
-      this.setState({
-        books: result,
-        prevSearchQuery: query,
-      });
     }
   }
 

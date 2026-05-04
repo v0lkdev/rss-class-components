@@ -11,7 +11,7 @@ interface SearchResponse {
     docs: SearchResponseDoc[];
 }
 
-export async function searchBooks(query: string, page: number = 1, limit: number = 10) {
+export async function searchBooks(query: string, page: number = 1, limit: number = 20) {
     let q = query.trim();
     if (q.length < 3) {
         q = 'new';
