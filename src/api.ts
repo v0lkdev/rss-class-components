@@ -23,6 +23,9 @@ export async function searchBooks(
   const response = await fetch(
     `${BOOK_API_URL}?q=${q}&page=${page}&limit=${limit}`
   );
+  if (!response.ok) {
+    throw new Error ('Search failed. Please try again later'); // TODO: confirm with Ivan
+  }
   const searchResult = (await response.json()) as SearchResponse;
   const books = searchResult.docs.map((book) => {
     return {

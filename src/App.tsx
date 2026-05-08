@@ -5,7 +5,7 @@ import ResultArea from './components/ResultArea/ResultArea';
 import { searchBooks } from './api';
 import { Hourglass } from 'react-loader-spinner';
 import ErrorBtn from './components/ErrorBtn/ErrorBtn';
-import ErrorBoundary from './components/ErrorBoundary';
+
 
 class App extends Component {
   state = {
@@ -14,24 +14,37 @@ class App extends Component {
     books: [],
     isLoading: false,
     btnIsDisabled: false,
+    errorMsg: null,
   };
 
   async componentDidMount() {
-    this.setState({ isLoading: true });
-    this.setState({ btnIsDisabled: true });
+    this.performSearch(this.state.searchQuery);
+  }
+
+  async performSearch(query: string) {
+    this.setState({ isLoading: true, btnIsDisabled: true });
     try {
-      const result = await searchBooks(this.state.searchQuery);
+      const result = await searchBooks(query);
       this.setState({
         books: result,
         prevSearchQuery: this.state.searchQuery,
+        errorMsg: null,
       });
     } catch (err: unknown) {
-      alert(
-        `Oops! Something went wrong. We couldn’t load the results. Please try again. Error: ${(err as Error).message}`
-      );
+      const message =
+        err instanceof Error
+          ? err.message
+          : 'Unknown error';
+
+      this.setState({ prevSearchQuery: this.state.searchQuery,
+          errorMsg:  <div>
+          Oops! Something went wrong.
+          We couldn’t load the results.
+          Please try again.
+          Error: {message}
+        </div> });
     }
-    this.setState({ isLoading: false });
-    this.setState({ btnIsDisabled: false });
+    this.setState({ isLoading: false, btnIsDisabled: false});
   }
 
   onSearchQueryUpdate = (query: string) => {
@@ -44,52 +57,32 @@ class App extends Component {
       searchQuery: query,
     });
     if (query !== this.state.prevSearchQuery) {
-      this.setState({ isLoading: true });
-      this.setState({ btnIsDisabled: true });
       localStorage.setItem('currentSearchValue', query);
-      try {
-        const result = await searchBooks(query);
-        this.setState({
-          books: result,
-          prevSearchQuery: query,
-        });
-      } catch (err: unknown) {
-        alert(
-          `Oops! Something went wrong. We couldn’t load the results. Please try again. Error: ${(err as Error).message}`
-        );
-      }
-      this.setState({ isLoading: false });
-      this.setState({ btnIsDisabled: false });
+      this.performSearch(query);
     }
   };
 
   render() {
     return (
       <div className="app-wrapper">
-        <ErrorBoundary fallback={<div>Oops😢</div>}>
           <ErrorBtn />
-        </ErrorBoundary>
-        <ErrorBoundary fallback={<div>Oops😢</div>}>
+          <div className='header'>Bookshelf</div>
           <SearchArea
             searchQuery={this.state.searchQuery}
             onChange={this.onSearchQueryUpdate}
             onClick={this.onSearchClick}
             buttonIsDisabled={this.state.btnIsDisabled}
           />
-        </ErrorBoundary>
         {this.state.isLoading ? (
-          <ErrorBoundary fallback={<div>Oops😢</div>}>
             <Hourglass
               height="200"
               width="200"
               colors={['#3A8AA6', '#ADE5FF']}
             />
-          </ErrorBoundary>
-        ) : (
-          <ErrorBoundary fallback={<div>Oops😢</div>}>
-            <ResultArea books={this.state.books} />
-          </ErrorBoundary>
-        )}
+        ) : !this.state.errorMsg ?
+          <ResultArea books={this.state.books} /> 
+          : this.state.errorMsg
+        }
       </div>
     );
   }
