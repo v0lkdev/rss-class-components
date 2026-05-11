@@ -7,6 +7,10 @@ type ResultItemProps = {
 
 export default class ResultItem extends Component<ResultItemProps> {
   render() {
-    return <li className="item-title">{this.props.title}</li>;
+    return (
+      <li className="item-title" aria-label="title">
+        {this.props.title}
+      </li>
+    );
   }
 }

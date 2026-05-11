@@ -24,15 +24,15 @@ export async function searchBooks(
     `${BOOK_API_URL}?q=${q}&page=${page}&limit=${limit}`
   );
   if (!response.ok) {
-    throw new Error ('Search failed. Please try again later'); // TODO: confirm with Ivan
+    throw new Error('Search failed. Please try again later');
   }
   const searchResult = (await response.json()) as SearchResponse;
   const books = searchResult.docs.map((book) => {
     return {
       title: book.title,
       author: book.author_name?.join(', ') || 'Unknown',
-      publishYear: book.first_publish_year,
-      editionCount: book.edition_count,
+      publishYear: book.first_publish_year || 'Unknown',
+      editionCount: book.edition_count || 'Unknown',
     };
   });
   return books;

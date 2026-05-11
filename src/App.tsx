@@ -6,7 +6,6 @@ import { searchBooks } from './api';
 import { Hourglass } from 'react-loader-spinner';
 import ErrorBtn from './components/ErrorBtn/ErrorBtn';
 
-
 class App extends Component {
   state = {
     prevSearchQuery: '',
@@ -31,20 +30,19 @@ class App extends Component {
         errorMsg: null,
       });
     } catch (err: unknown) {
-      const message =
-        err instanceof Error
-          ? err.message
-          : 'Unknown error';
+      const message = err instanceof Error ? err.message : 'Unknown error';
 
-      this.setState({ prevSearchQuery: this.state.searchQuery,
-          errorMsg:  <div>
-          Oops! Something went wrong.
-          We couldn’t load the results.
-          Please try again.
-          Error: {message}
-        </div> });
+      this.setState({
+        prevSearchQuery: this.state.searchQuery,
+        errorMsg: (
+          <div>
+            Oops! Something went wrong. We couldn’t load the results. Please try
+            again. Error: {message}
+          </div>
+        ),
+      });
     }
-    this.setState({ isLoading: false, btnIsDisabled: false});
+    this.setState({ isLoading: false, btnIsDisabled: false });
   }
 
   onSearchQueryUpdate = (query: string) => {
@@ -65,24 +63,21 @@ class App extends Component {
   render() {
     return (
       <div className="app-wrapper">
-          <ErrorBtn />
-          <div className='header'>Bookshelf</div>
-          <SearchArea
-            searchQuery={this.state.searchQuery}
-            onChange={this.onSearchQueryUpdate}
-            onClick={this.onSearchClick}
-            buttonIsDisabled={this.state.btnIsDisabled}
-          />
+        <ErrorBtn />
+        <div className="header">Bookshelf</div>
+        <SearchArea
+          searchQuery={this.state.searchQuery}
+          onChange={this.onSearchQueryUpdate}
+          onClick={this.onSearchClick}
+          buttonIsDisabled={this.state.btnIsDisabled}
+        />
         {this.state.isLoading ? (
-            <Hourglass
-              height="200"
-              width="200"
-              colors={['#3A8AA6', '#ADE5FF']}
-            />
-        ) : !this.state.errorMsg ?
-          <ResultArea books={this.state.books} /> 
-          : this.state.errorMsg
-        }
+          <Hourglass height="200" width="200" colors={['#3A8AA6', '#ADE5FF']} />
+        ) : !this.state.errorMsg ? (
+          <ResultArea books={this.state.books} />
+        ) : (
+          this.state.errorMsg
+        )}
       </div>
     );
   }
