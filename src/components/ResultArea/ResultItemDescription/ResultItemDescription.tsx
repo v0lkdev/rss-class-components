@@ -10,7 +10,7 @@ type ResultItemDescriptionProps = {
 export default class ResultItemDescription extends Component<ResultItemDescriptionProps> {
   render() {
     return (
-      <li>
+      <li aria-label="description">
         Author - <span className="description-data">{this.props.author}</span>;
         First publish year -{' '}
         <span className="description-data">{this.props.publishYear}</span>;
