@@ -3,8 +3,8 @@ const BOOK_API_URL = 'https://openlibrary.org/search.json';
 interface SearchResponseDoc {
   title: string;
   author_name: string[];
-  first_publish_year: number;
-  edition_count: number;
+  first_publish_year: number | string;
+  edition_count: number | string;
 }
 
 interface SearchResponse {
