@@ -19,6 +19,13 @@ html {
   align-items: center;
 }
 
+@media (min-width: 1200px) {
+  .app-wrapper {
+    padding-left: 200px;
+    padding-right: 200px;
+  }
+}
+
 .header {
   font-size: 35px;
   font-weight: 600;

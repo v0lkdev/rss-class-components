@@ -1,10 +1,11 @@
-import { useEffect, useState, type JSX } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import SearchArea from './components/SearchArea/SearchArea';
 import ResultArea from './components/ResultArea/ResultArea';
 import { searchBooks } from './api';
 import { Hourglass } from 'react-loader-spinner';
 import ErrorBtn from './components/ErrorBtn/ErrorBtn';
+import { useLocalStorage } from './components/useLocalStorage';
 
 interface Book {
   title: string;
@@ -13,83 +14,53 @@ interface Book {
   editionCount: number | string;
 }
 
-type State = {
-  prevSearchQuery: string;
-  searchQuery: string;
-  books: Book[];
-  isLoading: boolean;
-  btnIsDisabled: boolean;
-  errorMsg: JSX.Element | null;
-};
-
 function App() {
-  const [state, setState] = useState<State>({
-    prevSearchQuery: '',
-    searchQuery: localStorage.getItem('currentSearchValue') || '',
-    books: [],
-    isLoading: false,
-    btnIsDisabled: false,
-    errorMsg: null,
-  });
+  const [localStorageValue, setLocalStorage] =
+    useLocalStorage('currentSearchValue');
+
+  const [prevSearchQuery, setPrevSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(localStorageValue);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [btnIsDisabled, setBtnIsDisabled] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
     const runSearch = async () => {
-      await performSearch(state.searchQuery);
+      await performSearch(searchQuery);
     };
     runSearch();
   }, []);
 
   async function performSearch(query: string) {
-    setState({
-      ...state,
-      isLoading: true,
-      btnIsDisabled: true,
-    });
+    setIsLoading(true);
+    setBtnIsDisabled(true);
     try {
       const result = await searchBooks(query);
-      console.log(result);
-      setState((prevState) => ({
-        ...prevState,
-        books: result,
-        prevSearchQuery: state.searchQuery,
-        errorMsg: null,
-      }));
+      setBooks(result);
+      setPrevSearchQuery(searchQuery);
+      // setErrorMsg(null);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Unknown error';
 
-      setState((prevState) => ({
-        ...prevState,
-        prevSearchQuery: state.searchQuery,
-        errorMsg: (
-          <div>
-            Oops! Something went wrong. We couldn’t load the results. Please try
-            again. Error: {message}
-          </div>
-        ),
-      }));
+      setPrevSearchQuery(searchQuery);
+      setErrorMsg(
+        `Oops! Something went wrong. We couldn't load the results. Please try again. Error: ${message}`
+      );
     }
-    setState((prevState) => ({
-      ...prevState,
-      isLoading: false,
-      btnIsDisabled: false,
-    }));
+    setIsLoading(false);
+    setBtnIsDisabled(false);
   }
 
   function onSearchQueryUpdate(query: string) {
-    setState({
-      ...state,
-      searchQuery: query,
-    });
+    setSearchQuery(query);
   }
 
   async function onSearchClick() {
-    const query = state.searchQuery.trim();
-    setState({
-      ...state,
-      searchQuery: query,
-    });
-    if (query !== state.prevSearchQuery) {
-      localStorage.setItem('currentSearchValue', query);
+    const query = searchQuery.trim();
+    setSearchQuery(query);
+    if (query !== prevSearchQuery) {
+      setLocalStorage(query);
       performSearch(query);
     }
   }
@@ -99,17 +70,17 @@ function App() {
       <ErrorBtn />
       <div className="header">Bookshelf</div>
       <SearchArea
-        searchQuery={state.searchQuery}
+        searchQuery={searchQuery}
         onChange={onSearchQueryUpdate}
         onClick={onSearchClick}
-        buttonIsDisabled={state.btnIsDisabled}
+        buttonIsDisabled={btnIsDisabled}
       />
-      {state.isLoading ? (
+      {isLoading ? (
         <Hourglass height="200" width="200" colors={['#3A8AA6', '#ADE5FF']} />
-      ) : !state.errorMsg ? (
-        <ResultArea books={state.books} />
+      ) : !errorMsg ? (
+        <ResultArea books={books} />
       ) : (
-        state.errorMsg
+        <div>{errorMsg}</div>
       )}
     </div>
   );
