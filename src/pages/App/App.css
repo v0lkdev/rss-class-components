@@ -31,3 +31,20 @@ html {
   font-weight: 600;
   color: #0094fa;
 }
+
+.nav-link-about {
+  text-decoration: none;
+  color: #4f5254;
+  font-weight: 600;
+  margin-left: 50px;
+}
+
+.nav-link-about:hover {
+  color: #000;
+}
+
+.buttons-menu {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}

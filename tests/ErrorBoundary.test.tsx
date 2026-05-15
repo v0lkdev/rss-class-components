@@ -7,7 +7,7 @@ vi.mock('../src/api', () => ({
 }));
 import ErrorBtn from '../src/components/ErrorBtn/ErrorBtn';
 import ErrorBoundary from '../src/components/ErrorBoundary/ErrorBoundary';
-import App from '../src/App';
+import App from '../src/pages/App/App';
 import { searchBooks } from '../src/api';
 
 vi.mock('react-loader-spinner', () => ({

@@ -11,7 +11,7 @@ vi.mock('react-loader-spinner', () => ({
   Hourglass: () => <div>Spinner</div>,
 }));
 
-import App from '../src/App';
+import App from '../src/pages/App/App';
 
 describe('App integration tests', () => {
   afterEach(() => {

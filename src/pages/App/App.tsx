@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import SearchArea from './components/SearchArea/SearchArea';
-import ResultArea from './components/ResultArea/ResultArea';
-import { searchBooks } from './api';
+import SearchArea from '../../components/SearchArea/SearchArea';
+import ResultArea from '../../components/ResultArea/ResultArea';
+import { searchBooks } from '../../api';
 import { Hourglass } from 'react-loader-spinner';
-import ErrorBtn from './components/ErrorBtn/ErrorBtn';
-import { useLocalStorage } from './components/useLocalStorage';
+import ErrorBtn from '../../components/ErrorBtn/ErrorBtn';
+import { useLocalStorage } from '../../components/useLocalStorage';
+import { Link } from 'react-router';
 
 interface Book {
   title: string;
@@ -39,7 +40,6 @@ function App() {
       const result = await searchBooks(query);
       setBooks(result);
       setPrevSearchQuery(searchQuery);
-      // setErrorMsg(null);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Unknown error';
 
@@ -67,7 +67,12 @@ function App() {
 
   return (
     <div className="app-wrapper">
-      <ErrorBtn />
+      <div className="buttons-menu">
+        <Link to="/about" className="nav-link-about">
+          About
+        </Link>
+        <ErrorBtn />
+      </div>
       <div className="header">Bookshelf</div>
       <SearchArea
         searchQuery={searchQuery}

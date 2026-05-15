@@ -1,0 +1,37 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 20px;
+  font-weight: 400;
+  margin-top: 50px;
+  padding: 0;
+}
+
+.about-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.author-info {
+  margin-top: 50px;
+  margin-bottom: 100px;
+}
+
+.title,
+.school-link-wrapper {
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.descriptive-column {
+  font-weight: 600;
+}
+
+.name {
+  margin-bottom: 20px;
+}
