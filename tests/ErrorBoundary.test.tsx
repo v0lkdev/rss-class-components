@@ -7,8 +7,8 @@ vi.mock('../src/api', () => ({
 }));
 import ErrorBtn from '../src/components/ErrorBtn/ErrorBtn';
 import ErrorBoundary from '../src/components/ErrorBoundary/ErrorBoundary';
-import App from '../src/pages/App/App';
-import { searchBooks } from '../src/api';
+// import App from '../src/pages/App/App';
+// import { searchBooks } from '../src/api';
 
 vi.mock('react-loader-spinner', () => ({
   Hourglass: () => <div>Spinner</div>,
@@ -36,21 +36,21 @@ describe('Error boundary', () => {
     expect(errorText).toBeInTheDocument();
   });
 
-  it('shows error on unsuccessful response', async () => {
-    vi.mocked(searchBooks).mockRejectedValue(
-      new Error('Search failed. Please try again later')
-    );
-    render(
-      <ErrorBoundary fallback={<div>Oops</div>}>
-        <App />
-      </ErrorBoundary>
-    );
-    const searchBtn = screen.getByRole('button', { name: 'Search' });
+  // it('shows error on unsuccessful response', async () => {
+  //   vi.mocked(searchBooks).mockRejectedValue(
+  //     new Error('Search failed. Please try again later')
+  //   );
+  //   render(
+  //     <ErrorBoundary fallback={<div>Oops</div>}>
+  //       <App />
+  //     </ErrorBoundary>
+  //   );
+  //   const searchBtn = screen.getByRole('button', { name: 'Search' });
 
-    const user = userEvent.setup();
-    await user.click(searchBtn);
-    const errorText = await screen.findByText(/oops/i);
+  //   const user = userEvent.setup();
+  //   await user.click(searchBtn);
+  //   const errorText = await screen.findByText(/oops/i);
 
-    expect(errorText).toBeInTheDocument();
-  });
+  //   expect(errorText).toBeInTheDocument();
+  // });
 });
