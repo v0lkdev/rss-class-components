@@ -6,13 +6,14 @@ import { searchBooks } from '../../api';
 import { Hourglass } from 'react-loader-spinner';
 import ErrorBtn from '../../components/ErrorBtn/ErrorBtn';
 import { useLocalStorage } from '../../components/useLocalStorage';
-import { Link } from 'react-router';
+import { NavLink } from 'react-router';
 
 interface Book {
   title: string;
   author: string;
   publishYear: number | string;
   editionCount: number | string;
+  bookId: string;
 }
 
 function App() {
@@ -68,9 +69,9 @@ function App() {
   return (
     <div className="app-wrapper">
       <div className="buttons-menu">
-        <Link to="/about" className="nav-link-about">
+        <NavLink to="/about" className="nav-link-about">
           About
-        </Link>
+        </NavLink>
         <ErrorBtn />
       </div>
       <div className="header">Bookshelf</div>

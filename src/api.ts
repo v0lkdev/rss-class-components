@@ -1,14 +1,16 @@
-const BOOK_API_URL = 'https://openlibrary.org/search.json';
+const BOOK_API_URL = 'https://openlibrary.org';
+const COVER_API_URL = 'https://covers.openlibrary.org/b/id';
 
-interface SearchResponseDoc {
+interface SearchBooksResponseDoc {
   title: string;
   author_name: string[];
   first_publish_year: number | string;
   edition_count: number | string;
+  key: string;
 }
 
-interface SearchResponse {
-  docs: SearchResponseDoc[];
+interface SearchBooksResponse {
+  docs: SearchBooksResponseDoc[];
 }
 
 export async function searchBooks(
@@ -21,19 +23,83 @@ export async function searchBooks(
     q = 'new';
   }
   const response = await fetch(
-    `${BOOK_API_URL}?q=${q}&page=${page}&limit=${limit}`
+    `${BOOK_API_URL}/search.json?q=${q}&page=${page}&limit=${limit}`
   );
   if (!response.ok) {
     throw new Error('Search failed. Please try again later');
   }
-  const searchResult = (await response.json()) as SearchResponse;
+  const searchResult = (await response.json()) as SearchBooksResponse;
   const books = searchResult.docs.map((book) => {
     return {
       title: book.title,
       author: book.author_name?.join(', ') || 'Unknown',
       publishYear: book.first_publish_year || 'Unknown',
       editionCount: book.edition_count || 'Unknown',
+      bookId: book.key,
     };
   });
   return books;
+}
+
+interface SearchSelectedBookResponseDoc {
+  title: string;
+  author_name: string[];
+  first_publish_year: number | string;
+  language: string[];
+  cover_i: number | null;
+  key: string;
+}
+
+interface SearchSelectedBookResponse {
+  docs: SearchSelectedBookResponseDoc[];
+}
+
+export interface Book {
+  title: string;
+  author: string;
+  publishYear: number | string;
+  language: string;
+  coverId: number | null;
+}
+
+export async function searchSelectedBook(bookId: string): Promise<Book> {
+  const response = await fetch(`${BOOK_API_URL}/search.json?q=works/${bookId}`);
+  if (!response.ok) {
+    throw new Error('Search failed. Please try again later');
+  }
+  const searchResult = (await response.json()) as SearchSelectedBookResponse;
+  const book = searchResult.docs.find((book) => book.key.includes(bookId));
+  if (!book) {
+    throw new Error('Search failed. Please try again later');
+  }
+  return {
+    title: book.title,
+    author: book.author_name?.join(', ') || 'Unknown',
+    publishYear: book.first_publish_year || 'Unknown',
+    language: book.language.join(', '),
+    coverId: book.cover_i || null,
+  };
+}
+
+export function searchBookCover(coverId: string | number) {
+  return `${COVER_API_URL}/${coverId}-M.jpg`;
+}
+
+interface searchSelectedBookDescriptionResponse {
+  description: string | { value: string };
+}
+
+export async function searchSelectedBookDescription(bookId: string) {
+  const response = await fetch(`${BOOK_API_URL}/works/${bookId}.json`);
+  if (!response.ok) {
+    throw new Error('Search failed. Please try again later');
+  }
+  const searchResult =
+    (await response.json()) as searchSelectedBookDescriptionResponse;
+  const description = searchResult.description;
+  if (typeof description !== 'string') {
+    return description.value;
+  }
+
+  return description;
 }

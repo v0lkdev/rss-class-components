@@ -1,5 +1,5 @@
 import './NotFoundPage.css';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 export function NotFoundPage() {
   return (
@@ -9,9 +9,9 @@ export function NotFoundPage() {
       </div>
       <p className="not-found">Page not found</p>
       <p className="oops">Oops! The page you are looking for does not exist</p>
-      <Link to="/" className="nav-link-back-home">
+      <NavLink to="/" className="nav-link-back-home">
         BACK TO HOME
-      </Link>
+      </NavLink>
     </div>
   );
 }
