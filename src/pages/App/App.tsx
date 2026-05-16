@@ -6,7 +6,7 @@ import { searchBooks } from '../../api';
 import { Hourglass } from 'react-loader-spinner';
 import ErrorBtn from '../../components/ErrorBtn/ErrorBtn';
 import { useLocalStorage } from '../../components/useLocalStorage';
-import { NavLink } from 'react-router';
+import { NavLink } from 'react-router-dom';
 
 interface Book {
   title: string;

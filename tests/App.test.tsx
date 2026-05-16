@@ -5,6 +5,7 @@ vi.mock('../src/api', () => ({
   searchBooks: vi.fn(),
 }));
 import userEvent from '@testing-library/user-event';
+import { BrowserRouter } from 'react-router-dom';
 import { searchBooks } from '../src/api';
 
 vi.mock('react-loader-spinner', () => ({
@@ -23,7 +24,11 @@ describe('App integration tests', () => {
 
   it('should update input value when user types', async () => {
     vi.mocked(searchBooks).mockResolvedValue([]);
-    render(<App />);
+    render(
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    );
     const input = screen.getByRole('textbox');
     const user = userEvent.setup();
 
@@ -35,7 +40,11 @@ describe('App integration tests', () => {
 
   it('should trim Search query, then save it to localStorage and trigger search callback with correct parameters on Search button click', async () => {
     vi.mocked(searchBooks).mockResolvedValue([]);
-    render(<App />);
+    render(
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    );
     const input = screen.getByRole('textbox');
     const searchBtn = screen.getByRole('button', { name: 'Search' });
     const spySetItem = vi.spyOn(Storage.prototype, 'setItem');
@@ -51,7 +60,11 @@ describe('App integration tests', () => {
 
   it('should NOT set localStorage value and should NOT trigger search callback when new search is the same as the previous', async () => {
     vi.mocked(searchBooks).mockResolvedValue([]);
-    render(<App />);
+    render(
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    );
     const input = screen.getByRole('textbox');
     const searchBtn = screen.getByRole('button', { name: 'Search' });
     const spySetItem = vi.spyOn(Storage.prototype, 'setItem');
@@ -76,7 +89,11 @@ describe('App integration tests', () => {
 
   it('should make Search button disabled when loading is in progress', async () => {
     vi.mocked(searchBooks).mockImplementation(() => new Promise(() => {}));
-    render(<App />);
+    render(
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    );
     const input = screen.getByRole('textbox');
     const searchBtn = screen.getByRole('button', { name: 'Search' });
     const user = userEvent.setup();
