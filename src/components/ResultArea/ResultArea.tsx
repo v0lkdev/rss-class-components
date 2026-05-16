@@ -1,7 +1,7 @@
 import './ResultArea.css';
 import ResultItem from './ResultItem/ResultItem';
 import ResultItemDescription from './ResultItemDescription/ResultItemDescription';
-import { useOutlet } from 'react-router';
+import { useLocation, useOutlet } from 'react-router-dom';
 
 interface Book {
   title: string;
@@ -17,6 +17,7 @@ interface ResultAreaProps {
 
 export default function ResultArea({ books }: ResultAreaProps) {
   const outlet = useOutlet();
+  const location = useLocation();
 
   return (
     <div className="result-area">
@@ -31,6 +32,7 @@ export default function ResultArea({ books }: ResultAreaProps) {
                     key={index}
                     title={book.title}
                     bookId={book.bookId}
+                    active={location.pathname == `${book.bookId}`}
                   />
                 );
               })}

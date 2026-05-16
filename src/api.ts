@@ -76,13 +76,15 @@ export async function searchSelectedBook(bookId: string): Promise<Book> {
     title: book.title,
     author: book.author_name?.join(', ') || 'Unknown',
     publishYear: book.first_publish_year || 'Unknown',
-    language: book.language.join(', '),
+    language: book.language
+      ? book.language.join(', ')
+      : "0 or we don't have such information",
     coverId: book.cover_i || null,
   };
 }
 
 export function searchBookCover(coverId: string | number) {
-  return `${COVER_API_URL}/${coverId}-M.jpg`;
+  return `${COVER_API_URL}/${coverId}-L.jpg`;
 }
 
 interface searchSelectedBookDescriptionResponse {
@@ -97,6 +99,9 @@ export async function searchSelectedBookDescription(bookId: string) {
   const searchResult =
     (await response.json()) as searchSelectedBookDescriptionResponse;
   const description = searchResult.description;
+  if (!description) {
+    return 'Sorry, no description available 😔';
+  }
   if (typeof description !== 'string') {
     return description.value;
   }

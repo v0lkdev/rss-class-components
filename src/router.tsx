@@ -11,7 +11,7 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: '/works/:bookId',
+        path: 'works/:bookId',
         element: <ItemFullDescription />,
       },
     ],

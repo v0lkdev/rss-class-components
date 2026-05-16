@@ -18,3 +18,26 @@
 .added-info {
   color: blue;
 }
+
+.close-btn {
+  margin-top: 20px;
+  margin-right: 40px;
+  margin-left: auto;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 16px;
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #3a8aa6;
+  color: white;
+  border-radius: 8px;
+  border: none;
+}
+
+.close-btn:active {
+  background-color: #52accc;
+}
+
+.loader {
+  margin-top: 100px;
+}

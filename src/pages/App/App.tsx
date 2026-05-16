@@ -6,7 +6,7 @@ import { searchBooks } from '../../api';
 import { Hourglass } from 'react-loader-spinner';
 import ErrorBtn from '../../components/ErrorBtn/ErrorBtn';
 import { useLocalStorage } from '../../components/useLocalStorage';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 interface Book {
   title: string;
@@ -26,6 +26,8 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [btnIsDisabled, setBtnIsDisabled] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const runSearch = async () => {
@@ -64,6 +66,7 @@ function App() {
       setLocalStorage(query);
       performSearch(query);
     }
+    navigate('/');
   }
 
   return (

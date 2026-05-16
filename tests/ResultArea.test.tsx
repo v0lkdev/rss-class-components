@@ -10,8 +10,11 @@ describe('ResultArea', () => {
   });
 
   it('should display No books found text when there were no books array received it props', () => {
-    render(<ResultArea books={[]} />);
-
+    render(
+      <BrowserRouter>
+        <ResultArea books={[]} />
+      </BrowserRouter>
+    );
     const note = screen.getByText(/no/i);
 
     expect(note).toBeInTheDocument();
