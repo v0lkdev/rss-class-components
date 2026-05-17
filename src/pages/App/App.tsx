@@ -6,7 +6,8 @@ import { searchBooks } from '../../api';
 import { Hourglass } from 'react-loader-spinner';
 import ErrorBtn from '../../components/ErrorBtn/ErrorBtn';
 import { useLocalStorage } from '../../components/useLocalStorage';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { PaginationControls } from '../../components/ResultArea/PaginationControls/PaginationControls';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 
 interface Book {
   title: string;
@@ -19,6 +20,7 @@ interface Book {
 function App() {
   const [localStorageValue, setLocalStorage] =
     useLocalStorage('currentSearchValue');
+  const {page} = useParams();
 
   const [prevSearchQuery, setPrevSearchQuery] = useState('');
   const [searchQuery, setSearchQuery] = useState(localStorageValue);
@@ -26,23 +28,21 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [btnIsDisabled, setBtnIsDisabled] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [booksFoundTotal, setBooksFoundTotal] = useState(0);
+  const [currentPage, setCurrentPage] = useState (Number(page) || 1);
+  const itemsOnPagelimit = 10;
+
+
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const runSearch = async () => {
-      await performSearch(searchQuery);
-    };
-    runSearch();
-  }, []);
-
-  async function performSearch(query: string) {
+  async function performSearch(query: string, page: number, limit: number) {
     setIsLoading(true);
     setBtnIsDisabled(true);
     try {
-      const result = await searchBooks(query);
-      setBooks(result);
+      const {books, booksFoundTotal} = await searchBooks(query, page, limit);
+      setBooks(books);
       setPrevSearchQuery(searchQuery);
+      setBooksFoundTotal(booksFoundTotal);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Unknown error';
 
@@ -63,11 +63,16 @@ function App() {
     const query = searchQuery.trim();
     setSearchQuery(query);
     if (query !== prevSearchQuery) {
+      navigate('/');
       setLocalStorage(query);
-      performSearch(query);
     }
-    navigate('/');
   }
+
+  useEffect(() => {
+      (async () => {
+        performSearch(searchQuery, currentPage, itemsOnPagelimit);
+      })();
+    }, [currentPage]);
 
   return (
     <div className="app-wrapper">
@@ -87,7 +92,14 @@ function App() {
       {isLoading ? (
         <Hourglass height="200" width="200" colors={['#3A8AA6', '#ADE5FF']} />
       ) : !errorMsg ? (
-        <ResultArea books={books} />
+      <>
+        <ResultArea books={books}/>
+        <PaginationControls 
+          limit={itemsOnPagelimit}
+          itemsTotal={booksFoundTotal} 
+          onPageChange={(page: number) => setCurrentPage(page)}
+        />
+      </>
       ) : (
         <div>{errorMsg}</div>
       )}

@@ -1,0 +1,8 @@
+.pagination-wrapper {
+    display: flex;
+    max-width: 100%;
+    flex-direction: row;
+    overflow: auto;
+    text-overflow: ellipsis;
+    white-space: nowrap;        
+}

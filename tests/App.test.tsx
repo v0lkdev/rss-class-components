@@ -23,7 +23,7 @@ describe('App integration tests', () => {
   });
 
   it('should update input value when user types', async () => {
-    vi.mocked(searchBooks).mockResolvedValue([]);
+    vi.mocked(searchBooks).mockResolvedValue({books: [], booksFoundTotal: 0});
     render(
       <BrowserRouter>
         <App />
@@ -39,7 +39,7 @@ describe('App integration tests', () => {
   });
 
   it('should trim Search query, then save it to localStorage and trigger search callback with correct parameters on Search button click', async () => {
-    vi.mocked(searchBooks).mockResolvedValue([]);
+    vi.mocked(searchBooks).mockResolvedValue({books: [], booksFoundTotal: 0});
     render(
       <BrowserRouter>
         <App />
@@ -55,11 +55,11 @@ describe('App integration tests', () => {
 
     expect(spySetItem).toHaveBeenCalledWith('currentSearchValue', 'to trim');
     expect(localStorage.getItem('currentSearchValue')).toBe('to trim');
-    expect(searchBooks).toHaveBeenCalledWith('to trim');
+    expect(searchBooks).toHaveBeenCalledWith('to trim', 1, 10);
   });
 
   it('should NOT set localStorage value and should NOT trigger search callback when new search is the same as the previous', async () => {
-    vi.mocked(searchBooks).mockResolvedValue([]);
+    vi.mocked(searchBooks).mockResolvedValue({books: [], booksFoundTotal: 0});
     render(
       <BrowserRouter>
         <App />
@@ -77,13 +77,13 @@ describe('App integration tests', () => {
     await user.type(input, '{backspace}');
     await user.click(searchBtn);
 
-    expect(searchBooks).toHaveBeenNthCalledWith(1, '');
+    expect(searchBooks).toHaveBeenNthCalledWith(1, '', 1, 10);
     expect(spySetItem).toHaveBeenCalledExactlyOnceWith(
       'currentSearchValue',
       'one'
     );
     expect(localStorage.getItem('currentSearchValue')).toBe('one');
-    expect(searchBooks).toHaveBeenNthCalledWith(2, 'one');
+    expect(searchBooks).toHaveBeenNthCalledWith(2, 'one', 1, 10);
     expect(searchBooks).toHaveBeenCalledTimes(2);
   });
 

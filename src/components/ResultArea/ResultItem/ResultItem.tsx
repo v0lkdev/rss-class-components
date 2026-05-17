@@ -11,7 +11,8 @@ export default function ResultItem({ title, bookId, active }: ResultItemProps) {
   const navigate = useNavigate();
 
   const handleOnClick = async () => {
-    navigate(`/${bookId}`);
+    const slicedBookId = bookId.slice(1);
+    navigate(`${slicedBookId}`);
   };
 
   return (

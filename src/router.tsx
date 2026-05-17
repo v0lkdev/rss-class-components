@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter, Navigate } from 'react-router';
 import App from './pages/App/App.tsx';
 import { About } from './pages/About/About.tsx';
 import { Error } from './pages/Error/Error.tsx';
@@ -7,7 +7,7 @@ import { ItemFullDescription } from './components/ResultArea/ItemFullDescription
 
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: '/:page', 
     element: <App />,
     children: [
       {
@@ -16,6 +16,10 @@ export const router = createBrowserRouter([
       },
     ],
     errorElement: <Error />,
+  },
+  {
+    path: '/',
+    element: <Navigate to="/1" replace />,
   },
   {
     path: '/about',

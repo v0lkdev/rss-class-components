@@ -10,13 +10,14 @@ interface SearchBooksResponseDoc {
 }
 
 interface SearchBooksResponse {
+  num_found: number,
   docs: SearchBooksResponseDoc[];
 }
 
 export async function searchBooks(
   query: string,
-  page: number = 1,
-  limit: number = 20
+  page: number,
+  limit: number,
 ) {
   let q = query.trim();
   if (q.length < 3) {
@@ -29,6 +30,7 @@ export async function searchBooks(
     throw new Error('Search failed. Please try again later');
   }
   const searchResult = (await response.json()) as SearchBooksResponse;
+  const booksFoundTotal = searchResult.num_found;
   const books = searchResult.docs.map((book) => {
     return {
       title: book.title,
@@ -38,7 +40,7 @@ export async function searchBooks(
       bookId: book.key,
     };
   });
-  return books;
+  return {books, booksFoundTotal};
 }
 
 interface SearchSelectedBookResponseDoc {

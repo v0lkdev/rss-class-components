@@ -9,7 +9,7 @@ import {
 import { useNavigate, useParams } from 'react-router-dom';
 
 export function ItemFullDescription() {
-  const { bookId } = useParams();
+  const { bookId, page } = useParams();
   const navigate = useNavigate();
 
   const [book, setBook] = useState({} as Book);
@@ -31,13 +31,12 @@ export function ItemFullDescription() {
       setBook(book);
       setCoverUrl(coverUrl);
       setDescription(description);
-      console.log(coverUrl);
       setIsLoading(false);
     })();
   }, [bookId]);
 
-  function handleOnClick() {
-    navigate('/');
+  function handleOnClick(page: number) {
+    navigate(`/${page}`);
   }
 
   return (
@@ -46,7 +45,7 @@ export function ItemFullDescription() {
         <div className="loader">Loading...</div>
       ) : (
         <>
-          <button className="close-btn" onClick={handleOnClick}>
+          <button className="close-btn" onClick={() => handleOnClick(Number(page))}>
             X
           </button>
           <div className="wrapper">

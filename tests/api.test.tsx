@@ -9,12 +9,14 @@ function mockFetchFn() {
   mockFetch.mockResolvedValue({
     ok: true,
     json: async () => ({
+      num_found: 1,
       docs: [
         {
           title: 'Book',
           author_name: [],
           first_publish_year: 1924,
           edition_count: 1,
+          key: 'id',
         },
       ],
     }),
@@ -33,38 +35,50 @@ describe('API', () => {
   it('should call fetch with correct URL and correct params', async () => {
     mockFetchFn();
 
-    const result = await searchBooks('harry');
+    const result = await searchBooks('harry', 1, 10);
 
     expect(mockFetch).toHaveBeenCalledWith(
-      `https://openlibrary.org/search.json?q=harry&page=1&limit=20`
+      `https://openlibrary.org/search.json?q=harry&page=1&limit=10`
     );
     expect(mockFetch).toHaveBeenCalledTimes(1);
-    expect(result).toEqual([
+    expect(result).toEqual(
       {
-        title: 'Book',
-        author: 'Unknown',
-        publishYear: 1924,
-        editionCount: 1,
+        "books": [
+          {
+            "author": "Unknown",
+            "bookId": "id",
+            "editionCount": 1,
+            "publishYear": 1924,
+            "title": "Book",
+          },
+        ],
+        "booksFoundTotal": 1,
       },
-    ]);
+    );
   });
 
   it('should change query to "new" if its length < 3', async () => {
     mockFetchFn();
 
-    const result = await searchBooks('a');
+    const result = await searchBooks('a', 1, 10);
 
     expect(mockFetch).toHaveBeenCalledWith(
-      `https://openlibrary.org/search.json?q=new&page=1&limit=20`
+      `https://openlibrary.org/search.json?q=new&page=1&limit=10`
     );
     expect(mockFetch).toHaveBeenCalledTimes(1);
-    expect(result).toEqual([
+    expect(result).toEqual(
       {
-        title: 'Book',
-        author: 'Unknown',
-        publishYear: 1924,
-        editionCount: 1,
+        "books": [
+          {
+            "author": "Unknown",
+            "bookId": "id",
+            "editionCount": 1,
+            "publishYear": 1924,
+            "title": "Book",
+          },
+        ],
+        "booksFoundTotal": 1,
       },
-    ]);
+    );
   });
 });
