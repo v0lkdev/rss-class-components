@@ -43,7 +43,11 @@ describe('PaginationControlItem', () => {
           <Route
             path="/:page"
             element={
-              <PaginationControlItem page={1} onClick={vi.fn()} selected={true} />
+              <PaginationControlItem
+                page={1}
+                onClick={vi.fn()}
+                selected={true}
+              />
             }
           />
         </Routes>

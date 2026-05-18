@@ -29,7 +29,7 @@ describe('ItemFullDescription', () => {
           <Route path="/:page" element={<ItemFullDescription />} />
         </Routes>
       </MemoryRouter>
-    ); 
+    );
 
     expect(searchSelectedBook).not.toHaveBeenCalled();
     expect(searchSelectedBookDescription).not.toHaveBeenCalled();
@@ -82,7 +82,9 @@ describe('ItemFullDescription', () => {
       language: "0 or we don't have such information",
       coverId: null,
     });
-    vi.mocked(searchSelectedBookDescription).mockResolvedValue('No description');
+    vi.mocked(searchSelectedBookDescription).mockResolvedValue(
+      'No description'
+    );
 
     render(
       <MemoryRouter initialEntries={['/1/works/OL999W']}>

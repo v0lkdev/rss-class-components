@@ -61,7 +61,9 @@ export interface Book {
 }
 
 export async function searchSelectedBook(bookId: string): Promise<Book> {
-  const response = await fetch(`${BOOK_API_URL}/search.json?q=/works/${bookId}`);
+  const response = await fetch(
+    `${BOOK_API_URL}/search.json?q=/works/${bookId}`
+  );
   if (!response.ok) {
     throw new Error('Search failed. Please try again later');
   }

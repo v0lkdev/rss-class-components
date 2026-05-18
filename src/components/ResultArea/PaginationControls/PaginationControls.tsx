@@ -2,7 +2,6 @@ import './PaginationControls.css';
 import { PaginationControlItem } from '../PaginationControlItem/PaginationControlItem';
 import { useParams } from 'react-router-dom';
 
-
 interface PaginationControlsProps {
   itemsTotal: number;
   limit: number;

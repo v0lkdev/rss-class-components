@@ -17,7 +17,11 @@ describe('Result Item', () => {
           <Route
             path="/:page"
             element={
-              <ResultItem bookId="/works/1" title="Little Prince" active={false} />
+              <ResultItem
+                bookId="/works/1"
+                title="Little Prince"
+                active={false}
+              />
             }
           />
         </Routes>
@@ -36,7 +40,11 @@ describe('Result Item', () => {
           <Route
             path="/:page"
             element={
-              <ResultItem bookId="/works/1" title="Little Prince" active={true} />
+              <ResultItem
+                bookId="/works/1"
+                title="Little Prince"
+                active={true}
+              />
             }
           />
         </Routes>
@@ -67,10 +75,7 @@ describe('Result Item', () => {
               </>
             }
           >
-            <Route
-              path="works/:bookId"
-              element={<div>Book details</div>}
-            />
+            <Route path="works/:bookId" element={<div>Book details</div>} />
           </Route>
         </Routes>
       </MemoryRouter>

@@ -16,10 +16,8 @@ describe('Error page', () => {
       </BrowserRouter>
     );
 
-    expect(
-      screen.getByText(/something went wrong/i)
-    ).toBeInTheDocument();
-    expect(screen.getByRole('link', { name:  /back/i })).toHaveAttribute(
+    expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /back/i })).toHaveAttribute(
       'href',
       '/'
     );

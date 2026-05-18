@@ -81,7 +81,7 @@ describe('App integration tests', () => {
     expect(spySetItem).toHaveBeenCalledExactlyOnceWith(
       'currentSearchValue',
       'one'
-    ); 
+    );
     expect(localStorage.getItem('currentSearchValue')).toBe('one');
     expect(searchBooks).toHaveBeenNthCalledWith(2, 'one', 1, 10);
     expect(searchBooks).toHaveBeenCalledTimes(2);
@@ -166,7 +166,7 @@ describe('App integration tests', () => {
     vi.mocked(searchBooks).mockImplementation(() => new Promise(() => {}));
     render(
       <MemoryRouter>
-        <App /> 
+        <App />
       </MemoryRouter>
     );
     const input = screen.getByRole('textbox');

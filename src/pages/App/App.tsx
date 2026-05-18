@@ -70,7 +70,11 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      performSearch(submittedQuery || searchQuery, currentPage, itemsOnPagelimit);
+      performSearch(
+        submittedQuery || searchQuery,
+        currentPage,
+        itemsOnPagelimit
+      );
     })();
   }, [currentPage, submittedQuery]);
 
