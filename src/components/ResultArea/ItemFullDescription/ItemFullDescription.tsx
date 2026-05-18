@@ -45,7 +45,10 @@ export function ItemFullDescription() {
         <div className="loader">Loading...</div>
       ) : (
         <>
-          <button className="close-btn" onClick={() => handleOnClick(Number(page))}>
+          <button
+            className="close-btn"
+            onClick={() => handleOnClick(Number(page))}
+          >
             X
           </button>
           <div className="wrapper">

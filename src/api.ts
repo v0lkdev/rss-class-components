@@ -10,15 +10,11 @@ interface SearchBooksResponseDoc {
 }
 
 interface SearchBooksResponse {
-  num_found: number,
+  num_found: number;
   docs: SearchBooksResponseDoc[];
 }
 
-export async function searchBooks(
-  query: string,
-  page: number,
-  limit: number,
-) {
+export async function searchBooks(query: string, page: number, limit: number) {
   let q = query.trim();
   if (q.length < 3) {
     q = 'new';
@@ -40,7 +36,7 @@ export async function searchBooks(
       bookId: book.key,
     };
   });
-  return {books, booksFoundTotal};
+  return { books, booksFoundTotal };
 }
 
 interface SearchSelectedBookResponseDoc {

@@ -20,7 +20,7 @@ interface Book {
 function App() {
   const [localStorageValue, setLocalStorage] =
     useLocalStorage('currentSearchValue');
-  const {page} = useParams();
+  const { page } = useParams();
 
   const [prevSearchQuery, setPrevSearchQuery] = useState('');
   const [searchQuery, setSearchQuery] = useState(localStorageValue);
@@ -29,17 +29,16 @@ function App() {
   const [btnIsDisabled, setBtnIsDisabled] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [booksFoundTotal, setBooksFoundTotal] = useState(0);
-  const [currentPage, setCurrentPage] = useState (Number(page) || 1);
+  const [currentPage, setCurrentPage] = useState(Number(page) || 1);
+  const [submittedQuery, setSubmittedQuery] = useState('');
   const itemsOnPagelimit = 10;
-
-
 
   const navigate = useNavigate();
   async function performSearch(query: string, page: number, limit: number) {
     setIsLoading(true);
     setBtnIsDisabled(true);
     try {
-      const {books, booksFoundTotal} = await searchBooks(query, page, limit);
+      const { books, booksFoundTotal } = await searchBooks(query, page, limit);
       setBooks(books);
       setPrevSearchQuery(searchQuery);
       setBooksFoundTotal(booksFoundTotal);
@@ -59,20 +58,21 @@ function App() {
     setSearchQuery(query);
   }
 
-  async function onSearchClick() {
+  function onSearchClick() {
     const query = searchQuery.trim();
-    setSearchQuery(query);
+    setSubmittedQuery(query);
     if (query !== prevSearchQuery) {
-      navigate('/');
+      navigate('/1');
+      setCurrentPage(1);
       setLocalStorage(query);
     }
   }
 
   useEffect(() => {
-      (async () => {
-        performSearch(searchQuery, currentPage, itemsOnPagelimit);
-      })();
-    }, [currentPage]);
+    (async () => {
+      performSearch(submittedQuery || searchQuery, currentPage, itemsOnPagelimit);
+    })();
+  }, [currentPage, submittedQuery]);
 
   return (
     <div className="app-wrapper">
@@ -92,14 +92,14 @@ function App() {
       {isLoading ? (
         <Hourglass height="200" width="200" colors={['#3A8AA6', '#ADE5FF']} />
       ) : !errorMsg ? (
-      <>
-        <ResultArea books={books}/>
-        <PaginationControls 
-          limit={itemsOnPagelimit}
-          itemsTotal={booksFoundTotal} 
-          onPageChange={(page: number) => setCurrentPage(page)}
-        />
-      </>
+        <>
+          <ResultArea books={books} />
+          <PaginationControls
+            limit={itemsOnPagelimit}
+            itemsTotal={booksFoundTotal}
+            onPageChange={(page: number) => setCurrentPage(page)}
+          />
+        </>
       ) : (
         <div>{errorMsg}</div>
       )}

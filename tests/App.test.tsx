@@ -1,11 +1,11 @@
 import { it, expect, describe, vi, afterEach } from 'vitest';
-import { render, screen, cleanup } from '@testing-library/react';
+import { render, screen, cleanup, within } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 vi.mock('../src/api', () => ({
   searchBooks: vi.fn(),
 }));
 import userEvent from '@testing-library/user-event';
-import { BrowserRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { searchBooks } from '../src/api';
 
 vi.mock('react-loader-spinner', () => ({
@@ -23,11 +23,11 @@ describe('App integration tests', () => {
   });
 
   it('should update input value when user types', async () => {
-    vi.mocked(searchBooks).mockResolvedValue({books: [], booksFoundTotal: 0});
+    vi.mocked(searchBooks).mockResolvedValue({ books: [], booksFoundTotal: 0 });
     render(
-      <BrowserRouter>
+      <MemoryRouter>
         <App />
-      </BrowserRouter>
+      </MemoryRouter>
     );
     const input = screen.getByRole('textbox');
     const user = userEvent.setup();
@@ -39,11 +39,11 @@ describe('App integration tests', () => {
   });
 
   it('should trim Search query, then save it to localStorage and trigger search callback with correct parameters on Search button click', async () => {
-    vi.mocked(searchBooks).mockResolvedValue({books: [], booksFoundTotal: 0});
+    vi.mocked(searchBooks).mockResolvedValue({ books: [], booksFoundTotal: 0 });
     render(
-      <BrowserRouter>
+      <MemoryRouter>
         <App />
-      </BrowserRouter>
+      </MemoryRouter>
     );
     const input = screen.getByRole('textbox');
     const searchBtn = screen.getByRole('button', { name: 'Search' });
@@ -59,11 +59,11 @@ describe('App integration tests', () => {
   });
 
   it('should NOT set localStorage value and should NOT trigger search callback when new search is the same as the previous', async () => {
-    vi.mocked(searchBooks).mockResolvedValue({books: [], booksFoundTotal: 0});
+    vi.mocked(searchBooks).mockResolvedValue({ books: [], booksFoundTotal: 0 });
     render(
-      <BrowserRouter>
+      <MemoryRouter>
         <App />
-      </BrowserRouter>
+      </MemoryRouter>
     );
     const input = screen.getByRole('textbox');
     const searchBtn = screen.getByRole('button', { name: 'Search' });
@@ -81,18 +81,93 @@ describe('App integration tests', () => {
     expect(spySetItem).toHaveBeenCalledExactlyOnceWith(
       'currentSearchValue',
       'one'
-    );
+    ); 
     expect(localStorage.getItem('currentSearchValue')).toBe('one');
     expect(searchBooks).toHaveBeenNthCalledWith(2, 'one', 1, 10);
     expect(searchBooks).toHaveBeenCalledTimes(2);
   });
 
+  it('should display unknown error message when searchBooks rejects with non-Error value', async () => {
+    vi.mocked(searchBooks).mockRejectedValue('network failure');
+    render(
+      <MemoryRouter initialEntries={['/1']}>
+        <Routes>
+          <Route path="/:page" element={<App />} />
+        </Routes>
+      </MemoryRouter>
+    );
+    const searchBtn = screen.getByRole('button', { name: 'Search' });
+    const user = userEvent.setup();
+
+    await user.click(searchBtn);
+
+    expect(await screen.findByText(/unknown error/i)).toBeInTheDocument();
+  });
+
+  it('should display error message when searchBooks rejects', async () => {
+    vi.mocked(searchBooks).mockRejectedValue(
+      new Error('Search failed. Please try again later')
+    );
+    render(
+      <MemoryRouter initialEntries={['/1']}>
+        <Routes>
+          <Route path="/:page" element={<App />} />
+        </Routes>
+      </MemoryRouter>
+    );
+    const input = screen.getByRole('textbox');
+    const searchBtn = screen.getByRole('button', { name: 'Search' });
+    const user = userEvent.setup();
+
+    await user.type(input, 'error query');
+    await user.click(searchBtn);
+
+    expect(
+      await screen.findByText(/oops! something went wrong/i)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/search failed\. please try again later/i)
+    ).toBeInTheDocument();
+  });
+
+  it('should trigger search with new page when pagination item is clicked', async () => {
+    vi.mocked(searchBooks).mockResolvedValue({
+      books: [
+        {
+          title: 'Book',
+          author: 'Author',
+          publishYear: 2000,
+          editionCount: 1,
+          bookId: '/works/1',
+        },
+      ],
+      booksFoundTotal: 25,
+    });
+    render(
+      <MemoryRouter initialEntries={['/1']}>
+        <Routes>
+          <Route path="/:page" element={<App />} />
+        </Routes>
+      </MemoryRouter>
+    );
+    const searchBtn = screen.getByRole('button', { name: 'Search' });
+    const user = userEvent.setup();
+
+    await user.click(searchBtn);
+    await screen.findAllByRole('listitem');
+
+    const paginationList = screen.getAllByRole('list')[2];
+    await user.click(within(paginationList).getByText('2'));
+
+    expect(searchBooks).toHaveBeenLastCalledWith('', 2, 10);
+  });
+
   it('should make Search button disabled when loading is in progress', async () => {
     vi.mocked(searchBooks).mockImplementation(() => new Promise(() => {}));
     render(
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <MemoryRouter>
+        <App /> 
+      </MemoryRouter>
     );
     const input = screen.getByRole('textbox');
     const searchBtn = screen.getByRole('button', { name: 'Search' });

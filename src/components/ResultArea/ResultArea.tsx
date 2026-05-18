@@ -41,11 +41,7 @@ export default function ResultArea({ books }: ResultAreaProps) {
             </div>
             <div className="item-description-wrapper">
               <div className="list-header">Book Description</div>
-              {outlet ? (
-                outlet
-              ) : (
-                <ResultDescriptionSection books={books}/>
-              )}
+              {outlet ? outlet : <ResultDescriptionSection books={books} />}
             </div>
           </>
         ) : (

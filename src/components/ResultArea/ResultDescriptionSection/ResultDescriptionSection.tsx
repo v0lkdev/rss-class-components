@@ -1,4 +1,4 @@
-import './ResultDescriptionSection.css'
+import './ResultDescriptionSection.css';
 import ResultItemDescription from '../ResultItemDescription/ResultItemDescription';
 
 interface Book {
@@ -13,19 +13,21 @@ interface ResultDescriptionSectionProps {
   books: Book[];
 }
 
-export function ResultDescriptionSection({books}: ResultDescriptionSectionProps) {
-    return(
-        <ol className="item-description-list">
-            {books.map((book, index) => {
-                return (
-                <ResultItemDescription
-                    key={index}
-                    author={book.author}
-                    publishYear={book.publishYear}
-                    editionCount={book.editionCount}
-                />
-                );
-            })}
-        </ol>
-    )
+export function ResultDescriptionSection({
+  books,
+}: ResultDescriptionSectionProps) {
+  return (
+    <ol className="item-description-list">
+      {books.map((book, index) => {
+        return (
+          <ResultItemDescription
+            key={index}
+            author={book.author}
+            publishYear={book.publishYear}
+            editionCount={book.editionCount}
+          />
+        );
+      })}
+    </ol>
+  );
 }

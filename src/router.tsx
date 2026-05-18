@@ -7,7 +7,7 @@ import { ItemFullDescription } from './components/ResultArea/ItemFullDescription
 
 export const router = createBrowserRouter([
   {
-    path: '/:page', 
+    path: '/:page',
     element: <App />,
     children: [
       {
