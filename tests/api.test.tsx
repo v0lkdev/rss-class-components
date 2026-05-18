@@ -119,7 +119,7 @@ describe('API', () => {
     const result = await searchSelectedBook('OL123W');
 
     expect(mockFetch).toHaveBeenCalledWith(
-      'https://openlibrary.org/search.json?q=works/OL123W'
+      'https://openlibrary.org/search.json?q=/works/OL123W'
     );
     expect(result).toEqual({
       title: 'Selected Book',
