@@ -7,9 +7,10 @@
   outline: none;
   cursor: pointer;
   align-self: self-end;
-  margin-right: 100px;
+  margin-right: 50px;
 }
 
 .error-btn:active {
   background-color: #d93232;
+  color: #fff;
 }

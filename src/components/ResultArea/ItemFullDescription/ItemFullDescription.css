@@ -1,0 +1,42 @@
+.wrapper {
+  margin: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.book-title {
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.book-description {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.added-info {
+  color: blue;
+}
+
+.close-btn {
+  margin-top: 20px;
+  margin-right: 40px;
+  margin-left: auto;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 16px;
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #3a8aa6;
+  color: white;
+  border-radius: 8px;
+  border: none;
+}
+
+.close-btn:active {
+  background-color: #52accc;
+}
+
+.loader {
+  margin-top: 100px;
+}

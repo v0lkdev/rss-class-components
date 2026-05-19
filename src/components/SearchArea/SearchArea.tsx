@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import type { ChangeEvent } from 'react';
 import './SearchArea.css';
 
@@ -9,29 +8,32 @@ type SearchAreaProps = {
   buttonIsDisabled: boolean;
 };
 
-export default class SearchArea extends Component<SearchAreaProps> {
-  handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    this.props.onChange(e.target.value);
-  };
-
-  render() {
-    return (
-      <div className="search-area">
-        <input
-          type="text"
-          className="search-input"
-          placeholder="Type book name..."
-          value={this.props.searchQuery}
-          onChange={this.handleInputChange}
-        />
-        <button
-          className="search-btn"
-          onClick={this.props.onClick}
-          disabled={this.props.buttonIsDisabled}
-        >
-          Search
-        </button>
-      </div>
-    );
+export default function SearchArea({
+  searchQuery,
+  onChange,
+  onClick,
+  buttonIsDisabled,
+}: SearchAreaProps) {
+  function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
+    onChange(e.target.value);
   }
+
+  return (
+    <div className="search-area">
+      <input
+        type="text"
+        className="search-input"
+        placeholder="Type book name..."
+        value={searchQuery}
+        onChange={handleInputChange}
+      />
+      <button
+        className="search-btn"
+        onClick={onClick}
+        disabled={buttonIsDisabled}
+      >
+        Search
+      </button>
+    </div>
+  );
 }

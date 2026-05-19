@@ -1,53 +1,53 @@
-import { Component } from 'react';
 import './ResultArea.css';
 import ResultItem from './ResultItem/ResultItem';
-import ResultItemDescription from './ResultItemDescription/ResultItemDescription';
+import { ResultDescriptionSection } from './ResultDescriptionSection/ResultDescriptionSection';
+import { useLocation, useOutlet } from 'react-router-dom';
 
 interface Book {
   title: string;
   author: string;
-  publishYear: number;
-  editionCount: number;
+  publishYear: number | string;
+  editionCount: number | string;
+  bookId: string;
 }
 
 interface ResultAreaProps {
   books: Book[];
 }
 
-export default class ResultArea extends Component<ResultAreaProps> {
-  render() {
-    return (
+export default function ResultArea({ books }: ResultAreaProps) {
+  const outlet = useOutlet();
+  const location = useLocation();
+
+  return (
+    <>
       <div className="result-area">
-        {this.props.books.length > 0 ? (
+        {books.length > 0 ? (
           <>
             <div className="item-title-wrapper">
               <div className="list-header">Book name</div>
               <ol className="item-title-list">
-                {this.props.books.map((book, index) => {
-                  return <ResultItem key={index} title={book.title} />;
+                {books.map((book, index) => {
+                  return (
+                    <ResultItem
+                      key={index}
+                      title={book.title}
+                      bookId={book.bookId}
+                      active={location.pathname == `${book.bookId}`}
+                    />
+                  );
                 })}
               </ol>
             </div>
             <div className="item-description-wrapper">
               <div className="list-header">Book Description</div>
-              <ol className="item-description-list">
-                {this.props.books.map((book, index) => {
-                  return (
-                    <ResultItemDescription
-                      key={index}
-                      author={book.author}
-                      publishYear={book.publishYear}
-                      editionCount={book.editionCount}
-                    />
-                  );
-                })}
-              </ol>
+              {outlet ? outlet : <ResultDescriptionSection books={books} />}
             </div>
           </>
         ) : (
           <div>No books found</div>
         )}
       </div>
-    );
-  }
+    </>
+  );
 }
