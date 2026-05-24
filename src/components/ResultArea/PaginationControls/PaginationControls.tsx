@@ -17,7 +17,7 @@ export function PaginationControls({
   const { page } = useParams();
 
   const pagesTotal = Math.ceil(itemsTotal / limit);
-  const pages = Array.from({ length: pagesTotal }, (_, index) => index + 1);
+  const pages = Array.from({ length: pagesTotal < 100 ? pagesTotal : 100 }, (_, index) => index + 1);
   const { theme } = useContext(ThemeContext);
   const themeClassName = theme;
 
