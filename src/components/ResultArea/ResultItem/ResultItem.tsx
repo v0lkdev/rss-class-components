@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import './ResultItem.css';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../contexts';
 
 type ResultItemProps = {
   title: string;
@@ -9,6 +11,8 @@ type ResultItemProps = {
 
 export default function ResultItem({ title, bookId, active }: ResultItemProps) {
   const navigate = useNavigate();
+  const { theme } = useContext(ThemeContext);
+  const themeClassName = theme;
 
   const handleOnClick = async () => {
     const slicedBookId = bookId.slice(1);
@@ -17,7 +21,11 @@ export default function ResultItem({ title, bookId, active }: ResultItemProps) {
 
   return (
     <li
-      className={active ? 'selected item-title' : 'item-title'}
+      className={
+        active
+          ? `selected item-title ${themeClassName}`
+          : `item-title ${themeClassName}`
+      }
       aria-label="title"
       onClick={handleOnClick}
     >

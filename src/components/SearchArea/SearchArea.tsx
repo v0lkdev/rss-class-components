@@ -1,5 +1,6 @@
-import type { ChangeEvent } from 'react';
+import { useContext, type ChangeEvent } from 'react';
 import './SearchArea.css';
+import { ThemeContext } from '../../contexts';
 
 type SearchAreaProps = {
   searchQuery: string;
@@ -17,18 +18,20 @@ export default function SearchArea({
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     onChange(e.target.value);
   }
+  const { theme } = useContext(ThemeContext);
+  const themeClassName = theme;
 
   return (
-    <div className="search-area">
+    <div className={`search-area ${themeClassName}`}>
       <input
         type="text"
-        className="search-input"
+        className={`search-input ${themeClassName}`}
         placeholder="Type book name..."
         value={searchQuery}
         onChange={handleInputChange}
       />
       <button
-        className="search-btn"
+        className={`search-btn ${themeClassName}`}
         onClick={onClick}
         disabled={buttonIsDisabled}
       >

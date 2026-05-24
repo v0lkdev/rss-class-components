@@ -24,12 +24,25 @@
   transition: all 0.2s ease;
 }
 
+.pagination-control-item.dark {
+  background-color: #000;
+  color: #fff;
+}
+
 .pagination-control-item:hover {
   background-color: #eaf4ff;
 }
 
+.pagination-control-item:hover.dark {
+  background-color: #d9d7d7;
+}
+
 .pagination-control-item:active {
   background-color: #c7e4fc;
+}
+
+.pagination-control-item:active.dark {
+  background-color: #d9d7d7;
 }
 
 .selected {

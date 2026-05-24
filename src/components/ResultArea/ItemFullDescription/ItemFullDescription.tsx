@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import './ItemFullDescription.css';
 import {
   searchSelectedBook,
@@ -7,6 +7,7 @@ import {
   type Book,
 } from '../../../api';
 import { useNavigate, useParams } from 'react-router-dom';
+import { ThemeContext } from '../../../contexts';
 
 export function ItemFullDescription() {
   const { bookId, page } = useParams();
@@ -39,29 +40,40 @@ export function ItemFullDescription() {
     navigate(`/${page}`);
   }
 
+  const { theme } = useContext(ThemeContext);
+  const themeClassname = theme;
+
   return (
     <>
       {isLoading ? (
-        <div className="loader">Loading...</div>
+        <div className={`loader ${themeClassname}`}>Loading...</div>
       ) : (
         <>
           <button
-            className="close-btn"
+            className={`close-btn ${themeClassname}`}
             onClick={() => handleOnClick(Number(page))}
           >
             X
           </button>
-          <div className="wrapper">
+          <div className={`wrapper ${themeClassname}`}>
             <img src={coverUrl} alt="book cover" />
-            <p className="book-title">{book.title}</p>
-            <p className="book-author">by {book.author}</p>
-            <p className="book-description">{description}</p>
-            <p className="publish-date">
+            <p className={`book-title ${themeClassname}`}>{book.title}</p>
+            <p className={`book-author ${themeClassname}`}>by {book.author}</p>
+            <p className={`book-description ${themeClassname}`}>
+              {description}
+            </p>
+            <p className={`publish-date ${themeClassname}`}>
               Published in{' '}
-              <span className="added-info">{book.publishYear}</span> year
+              <span className={`added-info ${themeClassname}`}>
+                {book.publishYear}
+              </span>{' '}
+              year
             </p>
             <p className="languages">
-              Published in <span className="added-info">{book.language}</span>{' '}
+              Published in{' '}
+              <span className={`added-info ${themeClassname}`}>
+                {book.language}
+              </span>{' '}
               languages
             </p>
           </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import './App.css';
 import SearchArea from '../../components/SearchArea/SearchArea';
 import ResultArea from '../../components/ResultArea/ResultArea';
@@ -8,6 +8,7 @@ import ErrorBtn from '../../components/ErrorBtn/ErrorBtn';
 import { useLocalStorage } from '../../components/useLocalStorage';
 import { PaginationControls } from '../../components/ResultArea/PaginationControls/PaginationControls';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { ThemeContext } from '../../contexts';
 
 interface Book {
   title: string;
@@ -32,6 +33,8 @@ function App() {
   const [currentPage, setCurrentPage] = useState(Number(page) || 1);
   const [submittedQuery, setSubmittedQuery] = useState('');
   const itemsOnPagelimit = 10;
+  const { theme, handleThemeChange } = useContext(ThemeContext);
+  const themeClassName = theme;
 
   const navigate = useNavigate();
   async function performSearch(query: string, page: number, limit: number) {
@@ -80,13 +83,24 @@ function App() {
 
   return (
     <div className="app-wrapper">
+      <div className="theme-selector-wrapper">
+        <input
+          id="dark"
+          name="dark"
+          type="checkbox"
+          value="Dark"
+          onChange={handleThemeChange}
+          checked={theme === 'dark'}
+        />
+        <label htmlFor="dark">Dark Theme</label>
+      </div>
       <div className="buttons-menu">
-        <NavLink to="/about" className="nav-link-about">
+        <NavLink to="/about" className={`nav-link-about ${themeClassName}`}>
           About
         </NavLink>
         <ErrorBtn />
       </div>
-      <div className="header">Bookshelf</div>
+      <div className={`header ${themeClassName}`}>Bookshelf</div>
       <SearchArea
         searchQuery={searchQuery}
         onChange={onSearchQueryUpdate}

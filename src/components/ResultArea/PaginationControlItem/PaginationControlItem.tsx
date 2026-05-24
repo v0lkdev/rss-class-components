@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import './PaginationControlItem.css';
+import { useContext } from 'react';
+import { ThemeContext } from '../../../contexts';
 
 interface PaginationControlItemProps {
   page: number;
@@ -13,6 +15,8 @@ export function PaginationControlItem({
   selected,
 }: PaginationControlItemProps) {
   const navigate = useNavigate();
+  const { theme } = useContext(ThemeContext);
+  const themeClassName = theme;
 
   function handleOnClick(page: number) {
     onClick(page);
@@ -22,8 +26,8 @@ export function PaginationControlItem({
     <li
       className={
         selected
-          ? 'pagination-control-item selected'
-          : 'pagination-control-item'
+          ? `pagination-control-item selected ${themeClassName}`
+          : `pagination-control-item ${themeClassName}`
       }
       onClick={() => handleOnClick(page)}
     >
