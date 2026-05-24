@@ -1,0 +1,63 @@
+.wrapper {
+  margin: 40px;
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.wrapper.dark {
+  background-color: #c4c4c2;
+}
+
+.book-title {
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.book-description {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.added-info {
+  color: blue;
+}
+
+.added-info.dark {
+  color: red;
+}
+
+.close-btn {
+  margin-top: 20px;
+  margin-right: 40px;
+  margin-left: auto;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 16px;
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #3a8aa6;
+  color: white;
+  border-radius: 8px;
+  border: none;
+}
+
+.close-btn.dark {
+  background-color: #3d3d3b;
+}
+
+.close-btn:active {
+  background-color: #52accc;
+}
+
+.close-btn:active {
+  background-color: #000;
+}
+
+.loader {
+  margin-top: 100px;
+}
+
+.loader.dark {
+  color: white;
+}

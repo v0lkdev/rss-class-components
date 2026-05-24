@@ -1,0 +1,8 @@
+.item-title {
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.selected {
+  border: 1px solid red;
+}
