@@ -1,19 +1,25 @@
 import { it, expect, describe, vi, afterEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
-vi.mock('../src/api', () => ({
-  searchSelectedBook: vi.fn(),
-  searchSelectedBookDescription: vi.fn(),
-  searchBookCover: vi.fn(),
+vi.mock('../src/store', () => ({
+  useGetSelectedBookQuery: vi.fn(),
+  useGetSelectedBookDescriptionQuery: vi.fn(),
 }));
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import {
-  searchSelectedBook,
-  searchSelectedBookDescription,
-  searchBookCover,
-} from '../src/api';
+  useGetSelectedBookDescriptionQuery,
+  useGetSelectedBookQuery,
+} from '../src/store';
 import { ItemFullDescription } from '../src/components/ResultArea/ItemFullDescription/ItemFullDescription';
+
+const defaultBook = {
+  title: 'Little Prince',
+  author: 'Antoine de Saint-Exupéry',
+  publishYear: 1943,
+  language: 'fre',
+  coverId: 123,
+};
 
 describe('ItemFullDescription', () => {
   afterEach(() => {
@@ -22,7 +28,18 @@ describe('ItemFullDescription', () => {
     vi.clearAllMocks();
   });
 
-  it('should not fetch book data when bookId param is missing', () => {
+  it('should call book queries with undefined when bookId param is missing', () => {
+    vi.mocked(useGetSelectedBookQuery).mockReturnValue({
+      data: undefined,
+      isFetching: false,
+      refetch: vi.fn(),
+    });
+    vi.mocked(useGetSelectedBookDescriptionQuery).mockReturnValue({
+      data: undefined,
+      isFetching: false,
+      refetch: vi.fn(),
+    });
+
     render(
       <MemoryRouter initialEntries={['/2']}>
         <Routes>
@@ -31,24 +48,55 @@ describe('ItemFullDescription', () => {
       </MemoryRouter>
     );
 
-    expect(searchSelectedBook).not.toHaveBeenCalled();
-    expect(searchSelectedBookDescription).not.toHaveBeenCalled();
+    expect(useGetSelectedBookQuery).toHaveBeenCalledWith(undefined);
+    expect(useGetSelectedBookDescriptionQuery).toHaveBeenCalledWith(undefined);
   });
 
   it('should display loading state and then book details when data is loaded', async () => {
-    vi.mocked(searchSelectedBook).mockResolvedValue({
-      title: 'Little Prince',
-      author: 'Antoine de Saint-Exupéry',
-      publishYear: 1943,
-      language: 'fre',
-      coverId: 123,
+    vi.mocked(useGetSelectedBookQuery).mockReturnValue({
+      data: defaultBook,
+      isFetching: false,
+      refetch: vi.fn(),
     });
-    vi.mocked(searchSelectedBookDescription).mockResolvedValue(
-      'A story about a prince'
+    vi.mocked(useGetSelectedBookDescriptionQuery).mockReturnValue({
+      data: 'A story about a prince',
+      isFetching: false,
+      refetch: vi.fn(),
+    });
+
+    render(
+      <MemoryRouter initialEntries={['/2/works/OL123W']}>
+        <Routes>
+          <Route
+            path="/:page/works/:bookId"
+            element={<ItemFullDescription />}
+          />
+        </Routes>
+      </MemoryRouter>
     );
-    vi.mocked(searchBookCover).mockReturnValue(
+
+    expect(await screen.findByText('Little Prince')).toBeInTheDocument();
+    expect(screen.getByText(/Antoine de Saint-Exupéry/i)).toBeInTheDocument();
+    expect(screen.getByText('A story about a prince')).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'book cover' })).toHaveAttribute(
+      'src',
       'https://covers.openlibrary.org/b/id/123-L.jpg'
     );
+    expect(useGetSelectedBookQuery).toHaveBeenCalledWith('OL123W');
+    expect(useGetSelectedBookDescriptionQuery).toHaveBeenCalledWith('OL123W');
+  });
+
+  it('should display loading state while book data is fetching', () => {
+    vi.mocked(useGetSelectedBookQuery).mockReturnValue({
+      data: undefined,
+      isFetching: true,
+      refetch: vi.fn(),
+    });
+    vi.mocked(useGetSelectedBookDescriptionQuery).mockReturnValue({
+      data: undefined,
+      isFetching: false,
+      refetch: vi.fn(),
+    });
 
     render(
       <MemoryRouter initialEntries={['/2/works/OL123W']}>
@@ -62,29 +110,25 @@ describe('ItemFullDescription', () => {
     );
 
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
-
-    expect(await screen.findByText('Little Prince')).toBeInTheDocument();
-    expect(screen.getByText(/Antoine de Saint-Exupéry/i)).toBeInTheDocument();
-    expect(screen.getByText('A story about a prince')).toBeInTheDocument();
-    expect(screen.getByRole('img', { name: 'book cover' })).toHaveAttribute(
-      'src',
-      'https://covers.openlibrary.org/b/id/123-L.jpg'
-    );
-    expect(searchSelectedBook).toHaveBeenCalledWith('OL123W');
-    expect(searchSelectedBookDescription).toHaveBeenCalledWith('OL123W');
   });
 
   it('should use stub cover when book has no coverId', async () => {
-    vi.mocked(searchSelectedBook).mockResolvedValue({
-      title: 'No Cover Book',
-      author: 'Unknown',
-      publishYear: 'Unknown',
-      language: "0 or we don't have such information",
-      coverId: null,
+    vi.mocked(useGetSelectedBookQuery).mockReturnValue({
+      data: {
+        title: 'No Cover Book',
+        author: 'Unknown',
+        publishYear: 'Unknown',
+        language: "0 or we don't have such information",
+        coverId: null,
+      },
+      isFetching: false,
+      refetch: vi.fn(),
     });
-    vi.mocked(searchSelectedBookDescription).mockResolvedValue(
-      'No description'
-    );
+    vi.mocked(useGetSelectedBookDescriptionQuery).mockReturnValue({
+      data: 'No description',
+      isFetching: false,
+      refetch: vi.fn(),
+    });
 
     render(
       <MemoryRouter initialEntries={['/1/works/OL999W']}>
@@ -103,18 +147,25 @@ describe('ItemFullDescription', () => {
       'src',
       '../../../../public/stub-book-cover.jpg'
     );
-    expect(searchBookCover).not.toHaveBeenCalled();
   });
 
   it('should navigate to current page on close button click', async () => {
-    vi.mocked(searchSelectedBook).mockResolvedValue({
-      title: 'Book',
-      author: 'Author',
-      publishYear: 2000,
-      language: 'eng',
-      coverId: null,
+    vi.mocked(useGetSelectedBookQuery).mockReturnValue({
+      data: {
+        title: 'Book',
+        author: 'Author',
+        publishYear: 2000,
+        language: 'eng',
+        coverId: null,
+      },
+      isFetching: false,
+      refetch: vi.fn(),
     });
-    vi.mocked(searchSelectedBookDescription).mockResolvedValue('Description');
+    vi.mocked(useGetSelectedBookDescriptionQuery).mockReturnValue({
+      data: 'Description',
+      isFetching: false,
+      refetch: vi.fn(),
+    });
 
     const user = userEvent.setup();
 
