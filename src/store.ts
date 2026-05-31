@@ -66,7 +66,7 @@ export const booksApi = createApi({
         return {
           url: '/search.json',
           params: {
-            q: query,
+            q,
             page,
             limit,
           },
