@@ -2,6 +2,8 @@ import { RouterProvider } from 'react-router-dom';
 import { router } from './router.tsx';
 import { useEffect, useState } from 'react';
 import { ThemeContext } from './contexts.tsx';
+import { store } from './store.ts';
+import { Provider } from 'react-redux';
 
 export function Root() {
   const [theme, setTheme] = useState('light');
@@ -19,8 +21,10 @@ export function Root() {
   }, [theme]);
 
   return (
-    <ThemeContext value={{ theme, handleThemeChange }}>
-      <RouterProvider router={router} />
-    </ThemeContext>
+    <Provider store={store}>
+      <ThemeContext value={{ theme, handleThemeChange }}>
+        <RouterProvider router={router} />
+      </ThemeContext>
+    </Provider>
   );
 }

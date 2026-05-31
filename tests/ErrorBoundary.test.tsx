@@ -2,9 +2,6 @@ import { it, expect, describe, vi, afterEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import userEvent from '@testing-library/user-event';
-vi.mock('../src/api', () => ({
-  searchBooks: vi.fn(),
-}));
 import ErrorBtn from '../src/components/ErrorBtn/ErrorBtn';
 import ErrorBoundary from '../src/components/ErrorBoundary/ErrorBoundary';
 

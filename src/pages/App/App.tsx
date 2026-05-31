@@ -1,61 +1,36 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import './App.css';
 import SearchArea from '../../components/SearchArea/SearchArea';
 import ResultArea from '../../components/ResultArea/ResultArea';
-import { searchBooks } from '../../api';
 import { Hourglass } from 'react-loader-spinner';
 import ErrorBtn from '../../components/ErrorBtn/ErrorBtn';
 import { useLocalStorage } from '../../components/useLocalStorage';
 import { PaginationControls } from '../../components/ResultArea/PaginationControls/PaginationControls';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { ThemeContext } from '../../contexts';
-
-interface Book {
-  title: string;
-  author: string;
-  publishYear: number | string;
-  editionCount: number | string;
-  bookId: string;
-}
+import { useGetBooksQuery } from '../../store';
 
 function App() {
   const [localStorageValue, setLocalStorage] =
     useLocalStorage('currentSearchValue');
   const { page } = useParams();
 
-  const [prevSearchQuery, setPrevSearchQuery] = useState('');
   const [searchQuery, setSearchQuery] = useState(localStorageValue);
-  const [books, setBooks] = useState<Book[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [btnIsDisabled, setBtnIsDisabled] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [booksFoundTotal, setBooksFoundTotal] = useState(0);
-  const [currentPage, setCurrentPage] = useState(Number(page) || 1);
-  const [submittedQuery, setSubmittedQuery] = useState('');
+  const [submittedQuery, setSubmittedQuery] = useState(searchQuery);
   const itemsOnPagelimit = 10;
   const { theme, handleThemeChange } = useContext(ThemeContext);
   const themeClassName = theme;
 
   const navigate = useNavigate();
-  async function performSearch(query: string, page: number, limit: number) {
-    setIsLoading(true);
-    setBtnIsDisabled(true);
-    try {
-      const { books, booksFoundTotal } = await searchBooks(query, page, limit);
-      setBooks(books);
-      setPrevSearchQuery(searchQuery);
-      setBooksFoundTotal(booksFoundTotal);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Unknown error';
 
-      setPrevSearchQuery(searchQuery);
-      setErrorMsg(
-        `Oops! Something went wrong. We couldn't load the results. Please try again. Error: ${message}`
-      );
-    }
-    setIsLoading(false);
-    setBtnIsDisabled(false);
-  }
+  const { data, error, isFetching } = useGetBooksQuery({
+    query: submittedQuery,
+    page: Number(page) || 1,
+    limit: itemsOnPagelimit,
+  });
+  const errorMsg = error as string;
+  const books = data?.books || [];
+  const booksFoundTotal = data?.booksFoundTotal || 0;
 
   function onSearchQueryUpdate(query: string) {
     setSearchQuery(query);
@@ -63,23 +38,12 @@ function App() {
 
   function onSearchClick() {
     const query = searchQuery.trim();
-    setSubmittedQuery(query);
-    if (query !== prevSearchQuery) {
-      navigate('/1');
-      setCurrentPage(1);
+    if (query !== submittedQuery) {
       setLocalStorage(query);
+      setSubmittedQuery(query);
+      navigate('/1');
     }
   }
-
-  useEffect(() => {
-    (async () => {
-      performSearch(
-        submittedQuery || searchQuery,
-        currentPage,
-        itemsOnPagelimit
-      );
-    })();
-  }, [currentPage, submittedQuery]);
 
   return (
     <div className="app-wrapper">
@@ -105,9 +69,9 @@ function App() {
         searchQuery={searchQuery}
         onChange={onSearchQueryUpdate}
         onClick={onSearchClick}
-        buttonIsDisabled={btnIsDisabled}
+        buttonIsDisabled={isFetching}
       />
-      {isLoading ? (
+      {isFetching ? (
         <Hourglass height="200" width="200" colors={['#3A8AA6', '#ADE5FF']} />
       ) : !errorMsg ? (
         <>
@@ -115,7 +79,7 @@ function App() {
           <PaginationControls
             limit={itemsOnPagelimit}
             itemsTotal={booksFoundTotal}
-            onPageChange={(page: number) => setCurrentPage(page)}
+            onPageChange={(page: number) => navigate(`/${page}`)}
           />
         </>
       ) : (
