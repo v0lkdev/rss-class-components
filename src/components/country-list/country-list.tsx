@@ -4,6 +4,35 @@ import { getPopulationForYear, createYearDataMap } from '../../utils/data-transf
 
 import styles from './country-list.module.css';
 
+import { List, useDynamicRowHeight } from "react-window";
+
+import { type RowComponentProps } from "react-window";
+import { memo, useMemo } from 'react';
+ 
+function CardRow({
+  index,
+  style, 
+  countries,
+  selectedYear,
+  selectedColumns
+}: RowComponentProps<{
+  countries: Country[];
+  selectedYear: number;
+  selectedColumns: string[];
+}>) {
+  const country = countries[index];
+  return (
+    <div style={style}>
+      <CountryCard
+          key={country.id}
+          country={country}
+          selectedYear={selectedYear}
+          selectedColumns={selectedColumns}
+        />
+    </div>
+  );
+}
+
 type CountryListProps = {
   countries: Country[];
   searchQuery: string;
@@ -15,7 +44,7 @@ type CountryListProps = {
   onYearChange: (year: number) => void;
 };
 
-export const CountryList = ({
+export const CountryList = memo(({
   countries,
   searchQuery,
   selectedColumns,
@@ -24,7 +53,7 @@ export const CountryList = ({
   sortField,
   sortOrder,
 }: CountryListProps) => {
-  const filteredCountries = countries
+  const filteredCountries = useMemo(() => countries
     .filter((c) => {
       const matchesSearch = c.id.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesRegion = !selectedRegion || c.data.some((d) => d.region === selectedRegion);
@@ -38,18 +67,29 @@ export const CountryList = ({
         const popB = getPopulationForYear(createYearDataMap(b.data), selectedYear) || 0;
         return sortOrder === 'asc' ? popA - popB : popB - popA;
       }
-    });
+    }), [countries, searchQuery, selectedRegion, sortField, sortOrder, selectedYear]
+  );
+
+  const rowHeight = useDynamicRowHeight({
+    defaultRowHeight: 150
+  });
 
   return (
     <div className={styles.countryList}>
-      {filteredCountries.map((country, index) => (
-        <CountryCard
-          key={index}
-          country={country}
-          selectedYear={selectedYear}
-          selectedColumns={selectedColumns}
-        />
-      ))}
+      <List
+        rowComponent={CardRow}
+        rowCount={filteredCountries.length}
+        rowHeight={rowHeight}
+        rowProps={{ 
+          countries: filteredCountries,
+          selectedYear: selectedYear,
+          selectedColumns: selectedColumns
+        }}
+        style={{
+          height: '100vh',
+          width: '100%',
+        }}
+      />
     </div>
   );
-};
+});
