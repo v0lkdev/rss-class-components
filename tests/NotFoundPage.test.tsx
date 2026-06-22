@@ -2,7 +2,7 @@ import { it, expect, describe, afterEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { BrowserRouter } from 'react-router-dom';
-import { NotFoundPage } from '../src/pages/NotFoundPage/NotFoundPage';
+import { NotFoundPage } from '../src/views/NotFoundPage/NotFoundPage';
 
 describe('NotFoundPage', () => {
   afterEach(() => {

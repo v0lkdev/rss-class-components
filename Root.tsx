@@ -1,11 +1,9 @@
-import { RouterProvider } from 'react-router-dom';
-import { router } from './router.tsx';
 import { useEffect, useState } from 'react';
-import { ThemeContext } from './contexts.tsx';
-import { store } from './store.ts';
+import { ThemeContext } from './src/contexts';
+import { store } from './src/store';
 import { Provider } from 'react-redux';
 
-export function Root() {
+export default function Root() {
   const [theme, setTheme] = useState('light');
 
   function handleThemeChange() {
@@ -23,7 +21,6 @@ export function Root() {
   return (
     <Provider store={store}>
       <ThemeContext value={{ theme, handleThemeChange }}>
-        <RouterProvider router={router} />
       </ThemeContext>
     </Provider>
   );

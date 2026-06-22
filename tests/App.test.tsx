@@ -12,7 +12,7 @@ vi.mock('react-loader-spinner', () => ({
   Hourglass: () => <div>Spinner</div>,
 }));
 
-import App from '../src/pages/App/App';
+import App from '../src/views/App/App';
 
 const defaultQueryResult = {
   data: { books: [], booksFoundTotal: 0 },

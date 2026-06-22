@@ -1,7 +1,7 @@
 import { it, expect, describe, afterEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
-import { About } from '../src/pages/About/About';
+import { About } from '../src/views/About/About';
 
 describe('About page', () => {
   afterEach(() => {

@@ -1,10 +1,13 @@
-import { useContext } from 'react';
-import './About.css';
-import { ThemeContext } from '../../contexts';
+'use client';
 
-export function About() {
-  const { theme } = useContext(ThemeContext);
-  const themeClassName = theme;
+// import { useContext } from 'react';
+import './page.css';
+// import { ThemeContext } from '../../contexts';
+
+export default function About() {
+  // const { theme } = useContext(ThemeContext);
+  // const themeClassName = theme;
+  const themeClassName = 'light';
 
   return (
     <div className="about-wrapper">
