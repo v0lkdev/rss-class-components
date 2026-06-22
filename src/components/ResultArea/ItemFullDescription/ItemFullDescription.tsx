@@ -11,7 +11,7 @@ const COVER_API_URL = 'https://covers.openlibrary.org/b/id';
 
 function composeBookCover(coverId: string | number | undefined | null) {
   if (!coverId) {
-    return '../../../../public/stub-book-cover.jpg';
+    return '/stub-book-cover.jpg';
   }
   return `${COVER_API_URL}/${coverId}-L.jpg`;
 }

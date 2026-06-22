@@ -2,7 +2,7 @@ import { it, expect, describe, afterEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { BrowserRouter } from 'react-router-dom';
-import { Error } from '../src/pages/Error/Error';
+import { Error } from '../src/views/Error/Error';
 
 describe('Error page', () => {
   afterEach(() => {

@@ -1,28 +1,30 @@
-import { useContext, useState } from 'react';
-import './App.css';
+import { useState } from 'react';
 import SearchArea from '../../components/SearchArea/SearchArea';
 import ResultArea from '../../components/ResultArea/ResultArea';
 import { Hourglass } from 'react-loader-spinner';
 import ErrorBtn from '../../components/ErrorBtn/ErrorBtn';
 import { useLocalStorage } from '../../components/useLocalStorage';
 import { PaginationControls } from '../../components/ResultArea/PaginationControls/PaginationControls';
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
-import { ThemeContext } from '../../contexts';
+import { useRouter } from 'next/navigation'
+import Link from 'next/link';
+// import { NavLink, useNavigate, useParams } from 'react-router-dom';
+// import { ThemeContext } from '../../contexts';
 import { useGetBooksQuery } from '../../store';
 
 
-function App() {
+
+export default function App({ page }: { page: string }) {
   const [localStorageValue, setLocalStorage] =
     useLocalStorage('currentSearchValue');
-  const { page } = useParams();
 
   const [searchQuery, setSearchQuery] = useState(localStorageValue);
   const [submittedQuery, setSubmittedQuery] = useState(searchQuery);
   const itemsOnPagelimit = 10;
-  const { theme, handleThemeChange } = useContext(ThemeContext);
-  const themeClassName = theme;
+  // const { theme, handleThemeChange } = useContext(ThemeContext);
+  // const themeClassName = theme;
+  const themeClassName = 'light';
 
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const { data, error, isFetching } = useGetBooksQuery({
     query: submittedQuery,
@@ -42,7 +44,7 @@ function App() {
     if (query !== submittedQuery) {
       setLocalStorage(query);
       setSubmittedQuery(query);
-      navigate('/1');
+      router.push('/1');
     }
   }
 
@@ -54,15 +56,15 @@ function App() {
           name="dark"
           type="checkbox"
           value="Dark"
-          onChange={handleThemeChange}
-          checked={theme === 'dark'}
+          // onChange={handleThemeChange}
+          // checked={theme === 'dark'}
         />
         <label htmlFor="dark">Dark Theme</label>
       </div>
       <div className="buttons-menu">
-        <NavLink to="/about" className={`nav-link-about ${themeClassName}`}>
+        <Link href="/about" className={`nav-link-about ${themeClassName}`}>
           About
-        </NavLink>
+        </Link>
         <ErrorBtn />
       </div>
       <div className={`header ${themeClassName}`}>Bookshelf</div>
@@ -80,7 +82,7 @@ function App() {
           <PaginationControls
             limit={itemsOnPagelimit}
             itemsTotal={booksFoundTotal}
-            onPageChange={(page: number) => navigate(`/${page}`)}
+            onPageChange={(page: number) => router.push(`/${page}`)}
           />
         </>
       ) : (
@@ -89,5 +91,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

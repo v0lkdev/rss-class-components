@@ -1,6 +1,6 @@
-import { useContext } from 'react';
+// import { useContext } from 'react';
 import './ResultItemDescription.css';
-import { ThemeContext } from '../../../contexts';
+// import { ThemeContext } from '../../../contexts';
 
 type ResultItemDescriptionProps = {
   author: string;
@@ -13,8 +13,9 @@ export default function ResultItemDescription({
   publishYear,
   editionCount,
 }: ResultItemDescriptionProps) {
-  const { theme } = useContext(ThemeContext);
-  const themeClassName = theme;
+  // const { theme } = useContext(ThemeContext);
+  // const themeClassName = theme;
+  const themeClassName = 'light';
 
   return (
     <li aria-label="description" className={themeClassName}>

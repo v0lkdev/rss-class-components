@@ -1,9 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export function useLocalStorage(key: string): [string, (a: string) => void] {
-  const [value, setValue] = useState(() => {
-    return localStorage.getItem(key) || '';
-  });
+  const [value, setValue] = useState('');
 
   const [prevKey, setPrevKey] = useState(key);
 
@@ -11,6 +9,10 @@ export function useLocalStorage(key: string): [string, (a: string) => void] {
     setPrevKey(key);
     setValue(localStorage.getItem(key) || '');
   }
+
+  useEffect(() => {
+    setValue(localStorage.getItem(key) || '');
+  }, [])
 
   function handleSetLocalStorage(localStorageValue: string) {
     localStorage.setItem(key, localStorageValue);

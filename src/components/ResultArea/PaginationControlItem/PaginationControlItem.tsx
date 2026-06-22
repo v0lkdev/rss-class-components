@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import './PaginationControlItem.css';
-import { useContext } from 'react';
-import { ThemeContext } from '../../../contexts';
+// import { useContext } from 'react';
+// import { ThemeContext } from '../../../contexts';
 
 interface PaginationControlItemProps {
   page: number;
@@ -15,8 +15,9 @@ export function PaginationControlItem({
   selected,
 }: PaginationControlItemProps) {
   const navigate = useNavigate();
-  const { theme } = useContext(ThemeContext);
-  const themeClassName = theme;
+  // const { theme } = useContext(ThemeContext);
+  // const themeClassName = theme;
+  const themeClassName = 'light';
 
   function handleOnClick(page: number) {
     onClick(page);

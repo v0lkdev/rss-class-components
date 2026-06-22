@@ -1,8 +1,8 @@
 import './PaginationControls.css';
 import { PaginationControlItem } from '../PaginationControlItem/PaginationControlItem';
 import { useParams } from 'react-router-dom';
-import { useContext } from 'react';
-import { ThemeContext } from '../../../contexts';
+// import { useContext } from 'react';
+// import { ThemeContext } from '../../../contexts';
 
 interface PaginationControlsProps {
   itemsTotal: number;
@@ -21,8 +21,9 @@ export function PaginationControls({
     { length: pagesTotal < 100 ? pagesTotal : 100 },
     (_, index) => index + 1
   );
-  const { theme } = useContext(ThemeContext);
-  const themeClassName = theme;
+  // const { theme } = useContext(ThemeContext);
+  // const themeClassName = theme;
+  const themeClassName = 'light';
 
   return (
     <ul className={`pagination-wrapper ${themeClassName}`}>

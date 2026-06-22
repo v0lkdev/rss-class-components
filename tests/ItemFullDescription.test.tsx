@@ -145,7 +145,7 @@ describe('ItemFullDescription', () => {
 
     expect(cover).toHaveAttribute(
       'src',
-      '../../../../public/stub-book-cover.jpg'
+      '/stub-book-cover.jpg'
     );
   });
 

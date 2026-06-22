@@ -1,6 +1,8 @@
-import { useContext, type ChangeEvent } from 'react';
+'use client';
+
+import { type ChangeEvent } from 'react';
 import './SearchArea.css';
-import { ThemeContext } from '../../contexts';
+// import { ThemeContext } from '../../contexts';
 
 type SearchAreaProps = {
   searchQuery: string;
@@ -18,8 +20,9 @@ export default function SearchArea({
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     onChange(e.target.value);
   }
-  const { theme } = useContext(ThemeContext);
-  const themeClassName = theme;
+  // const { theme } = useContext(ThemeContext);
+  // const themeClassName = theme;
+  const themeClassName = 'light';
 
   return (
     <div className={`search-area ${themeClassName}`}>

@@ -25,3 +25,6 @@ dist-ssr
 
 coverage
 .vite
+.next
+next-env.d.ts
+dist

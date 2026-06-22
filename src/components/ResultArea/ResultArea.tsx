@@ -1,9 +1,10 @@
 import './ResultArea.css';
 import ResultItem from './ResultItem/ResultItem';
 import { ResultDescriptionSection } from './ResultDescriptionSection/ResultDescriptionSection';
-import { useLocation, useOutlet } from 'react-router-dom';
-import { useContext } from 'react';
-import { ThemeContext } from '../../contexts';
+import { useOutlet } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
+// import { useContext } from 'react';
+// import { ThemeContext } from '../../contexts';
 
 interface Book {
   title: string;
@@ -19,9 +20,10 @@ interface ResultAreaProps {
 
 export default function ResultArea({ books }: ResultAreaProps) {
   const outlet = useOutlet();
-  const location = useLocation();
-  const { theme } = useContext(ThemeContext);
-  const themeClassName = theme;
+  const pathname = usePathname();
+  // const { theme } = useContext(ThemeContext);
+  // const themeClassName = theme;
+  const themeClassName = 'light';
 
   return (
     <>
@@ -38,8 +40,8 @@ export default function ResultArea({ books }: ResultAreaProps) {
                       title={book.title}
                       bookId={book.bookId}
                       active={
-                        location.pathname.slice(
-                          location.pathname.indexOf('/works')
+                        pathname.slice(
+                          pathname.indexOf('/works')
                         ) === `${book.bookId}`
                       }
                     />
